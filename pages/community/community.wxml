@@ -1,0 +1,91 @@
+<!--pages/community/community.wxml-->
+<view class="page">
+  <!-- 顶部 -->
+  <view class="comm-head">
+<paw size="96" color="rgba(255,255,255,.25)" rotate="18" class="comm-paw" />
+    <view class="ch-title">💬 宠物社区</view>
+    <view class="ch-sub">和铲屎官们分享毛孩子的日常</view>
+    <picker mode="selector" range="{{petOptions}}" range-key="label" bindchange="onPetFilter">
+      <view class="pet-filter">
+        {{filterLabel}} ▾
+      </view>
+    </picker>
+  </view>
+
+  <view class="container">
+    <view class="feed">
+      <view class="moment card" wx:for="{{list}}" wx:key="id">
+        <!-- 作者 -->
+        <view class="m-head">
+          <view class="avatar avatar-ph" style="background:{{item.authorColor}};width:76rpx;height:76rpx;font-size:30rpx">
+            {{item.authorFirst}}
+          </view>
+          <view class="m-author flex1">
+            <view class="m-name">{{item.author}}
+              <text class="m-pet" wx:if="{{item.petName}}"> · {{item.petEmoji}} {{item.petName}}</text>
+            </view>
+            <view class="m-time">{{item.timeText}}</view>
+          </view>
+          <view class="m-follow" wx:if="{{item.author !== '我'}}">关注</view>
+        </view>
+
+        <!-- 文案 -->
+        <view class="m-text">{{item.text}}</view>
+
+        <!-- 图片（演示无图时用暖色占位） -->
+        <view class="m-imgs" wx:if="{{item.images.length}}">
+          <image wx:for="{{item.images}}" wx:for-item="img" wx:key="*this" src="{{img}}" mode="aspectFill"
+            class="m-img {{item.images.length === 1 ? 'single' : ''}}" />
+        </view>
+        <view class="m-img-ph" wx:elif="{{!item.petId || item.petName}}">
+          <view class="ph-emoji">{{item.petEmoji || '🐾'}}</view>
+          <view class="ph-text" wx:if="{{item.petName}}">{{item.petName}} 的日常瞬间</view>
+        </view>
+
+        <!-- 操作栏 -->
+        <view class="m-actions">
+          <view class="act {{item.liked ? 'liked' : ''}}" data-id="{{item.id}}" bindtap="onLike">
+            {{item.liked ? '❤️' : '🤍'}} {{item.likes}}
+          </view>
+          <view class="act" data-id="{{item.id}}" bindtap="onComment">💬 {{item.comments.length}}</view>
+          <view class="act" catchtap="onShare">↗️ 分享</view>
+        </view>
+
+        <!-- 评论区 -->
+        <view class="m-comments" wx:if="{{item.comments.length}}">
+          <view class="cmt" wx:for="{{item.comments}}" wx:for-item="c" wx:key="text">
+            <text class="cmt-user">{{c.user}}：</text>{{c.text}}
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 发布按钮 -->
+  <view class="fab" bindtap="openComposer">✏️</view>
+
+  <!-- 发布面板 -->
+  <view class="mask" wx:if="{{showComposer}}" bindtap="closeComposer">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title">发布动态</view>
+      <view class="composer-pet">
+        <picker mode="selector" range="{{petOptions}}" range-key="label" bindchange="onComposerPet">
+          <view class="cpet">🐾 关联宠物（可选） ▾</view>
+        </picker>
+      </view>
+      <textarea class="composer-text" placeholder="分享毛孩子的可爱瞬间吧～" placeholder-class="ph"
+        value="{{composer.text}}" bindinput="onComposerText" maxlength="500" auto-height />
+      <view class="img-row">
+        <view class="img-cell" wx:for="{{composer.images}}" wx:key="*this">
+          <image src="{{item}}" mode="aspectFill" class="img-prev" />
+          <view class="img-del" data-index="{{index}}" catchtap="removeImage">✕</view>
+        </view>
+        <view class="img-add" wx:if="{{composer.images.length < 9}}" bindtap="addImages">＋</view>
+      </view>
+      <view class="sheet-actions">
+        <button class="btn btn-ghost flex1" bindtap="closeComposer">取消</button>
+        <button class="btn btn-primary flex1" style="margin-left:20rpx" bindtap="publish">发布</button>
+      </view>
+    </view>
+  </view>
+</view>

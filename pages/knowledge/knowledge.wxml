@@ -1,0 +1,46 @@
+<!--pages/knowledge/knowledge.wxml-->
+<view class="page">
+  <view class="kb-head">
+<paw size="90" color="rgba(255,255,255,.3)" rotate="-15" class="kb-paw" />
+    <view class="kb-title">📚 养宠知识库</view>
+    <view class="kb-sub">科学喂养 · 疾病护理 · 行为训练 · 好物推荐</view>
+    <view class="kb-search">
+      <text class="kb-s-icon">🔍</text>
+      <input class="kb-input" placeholder="搜索喂养指南、疾病护理…" placeholder-class="ph"
+        value="{{keyword}}" bindinput="onSearch" />
+      <view class="kb-collect {{collectedOnly ? 'on' : ''}}" bindtap="toggleCollectedOnly">☆ 只看收藏</view>
+    </view>
+  </view>
+
+  <view class="container">
+    <!-- 分类 -->
+    <scroll-view scroll-x class="cat-scroll" enhanced show-scrollbar="{{false}}">
+      <view class="cat-row">
+        <view class="cat-chip {{cat === item ? 'active' : ''}}" wx:for="{{cats}}" wx:key="*this"
+          data-cat="{{item}}" bindtap="onCat">{{item}}</view>
+      </view>
+    </scroll-view>
+
+    <!-- 文章列表 -->
+    <view class="article" wx:for="{{list}}" wx:key="id" data-id="{{item.id}}" data-title="{{item.title}}" bindtap="openArticle">
+      <view class="art-cat">{{item.category}}</view>
+      <view class="art-title">{{item.title}}</view>
+      <view class="art-summary">{{item.summary}}</view>
+      <view class="art-foot">
+        <view class="art-tags">
+          <text class="tag" wx:for="{{item.tags}}" wx:for-item="t" wx:key="*this">{{t}}</text>
+        </view>
+        <view class="art-side">
+          <text class="art-read">👁 {{item.readText}}</text>
+          <text class="art-star {{item.collected ? 'on' : ''}}" data-id="{{item.id}}" catchtap="toggleCollect">{{item.collected ? '★' : '☆'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty" wx:if="{{!list.length}}">
+      <view class="empty-icon">🔎</view>
+      <view class="empty-title">没有找到相关文章</view>
+      <view class="empty-desc">换个关键词试试吧</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,72 @@
+<!--pages/weight/weight.wxml-->
+<view class="page">
+  <view class="w-hero">
+    <view class="w-stat">
+      <view class="w-num">{{latest ? latest.weight : '--'}}</view>
+      <view class="w-unit">kg</view>
+    </view>
+    <view class="w-info">
+      <view class="w-title">{{petName}} 的当前体重</view>
+      <view class="w-date">{{latest ? latest.date + ' 记录' : '暂无记录'}}</view>
+      <view class="trend {{trend.level}}" bindtap="showWarn">
+        {{trend.level === 'danger' ? '⚠️ ' : ''}}{{trend.text}}
+      </view>
+    </view>
+  </view>
+
+  <view class="container">
+    <view class="seg">
+      <view class="seg-item {{range === item.key ? 'active' : ''}}" wx:for="{{ranges}}" wx:key="key"
+        data-key="{{item.key}}" bindtap="onRange">{{item.label}}</view>
+    </view>
+
+    <view class="card chart-card">
+      <view class="chart-title">⚖️ 体重变化曲线</view>
+      <canvas canvas-id="weightChart" class="chart" style="width:640rpx;height:420rpx"></canvas>
+      <view class="chart-tip">横轴为记录日期 · 纵轴为体重 (kg)</view>
+    </view>
+
+    <!-- 历史记录 -->
+    <view class="section-head">
+      <view class="section-title">历史记录</view>
+      <view class="link-more" bindtap="openForm">＋ 记录体重</view>
+    </view>
+    <view class="card rec-card">
+      <view class="rec-row" wx:for="{{records}}" wx:key="id">
+        <view class="rec-date">
+          <view class="rec-d">{{item.dayText}}</view>
+          <view class="rec-m">{{item.monthText}}</view>
+        </view>
+        <view class="rec-body flex1">
+          <view class="rec-weight">{{item.weight}} <text>kg</text></view>
+        </view>
+        <view class="rec-diff {{item.diffDown ? 'down' : ''}}" wx:if="{{index > 0}}">{{item.diffText}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 记录弹层 -->
+  <view class="mask" wx:if="{{showForm}}" bindtap="closeForm">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title">记录体重</view>
+      <view class="form-card" style="margin:0">
+        <view class="form-item">
+          <view class="form-label">体重 (kg)</view>
+          <input class="form-input" type="digit" placeholder="如：4.6" placeholder-class="ph"
+            value="{{form.weight}}" bindinput="onWeight" focus />
+        </view>
+        <view class="form-item">
+          <view class="form-label">记录日期</view>
+          <picker mode="date" value="{{form.date}}" end="2030-12-31" bindchange="onDate">
+            <view class="form-value picker-value">{{form.date}}<text class="form-arrow">▾</text></view>
+          </picker>
+        </view>
+      </view>
+      <view class="sheet-actions">
+        <button class="btn btn-ghost flex1" bindtap="closeForm">取消</button>
+        <button class="btn btn-primary flex1" style="margin-left:20rpx" bindtap="saveWeight">保存记录</button>
+      </view>
+    </view>
+  </view>
+</view>
+

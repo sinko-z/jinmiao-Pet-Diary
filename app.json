@@ -1,0 +1,53 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/community/community",
+    "pages/shop/index/index",
+    "pages/mine/mine",
+    "pages/login/login",
+    "pages/pet/detail/detail",
+    "pages/pet/edit/edit",
+    "pages/pet/nearby/nearby",
+    "pages/growth/growth",
+    "pages/track/track",
+    "pages/feed/feed",
+    "pages/health/health",
+    "pages/weight/weight",
+    "pages/lost/lost",
+    "pages/knowledge/knowledge",
+    "pages/nearby/nearby",
+    "pages/shop/detail/detail",
+    "pages/shop/apply/apply",
+    "pages/shop/manage/manage",
+    "pages/profile/edit/edit"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#FFF4E6",
+    "navigationBarTitleText": "金喵宠物日记",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#FFF7EE",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#B08968",
+    "selectedColor": "#E8590C",
+    "backgroundColor": "#FFF9F0",
+    "borderStyle": "white",
+    "custom": true,
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页" },
+      { "pagePath": "pages/community/community", "text": "社区" },
+      { "pagePath": "pages/shop/index/index", "text": "宠物店" },
+      { "pagePath": "pages/mine/mine", "text": "我的" }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于记录宠物活动轨迹、展示附近宠物与宠物服务"
+    }
+  },
+  "requiredPrivateInfos": ["getLocation", "chooseLocation"],
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

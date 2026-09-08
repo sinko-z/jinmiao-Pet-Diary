@@ -1,0 +1,44 @@
+/* pages/lost/lost.wxss */
+.lost-hero {
+  display: flex; align-items: center;
+  background: linear-gradient(150deg, #F7CDBB, #E98A63);
+  padding: 40rpx 34rpx; border-radius: 0 0 44rpx 44rpx;
+}
+.lh-icon { font-size: 70rpx; margin-right: 22rpx; }
+.lh-title { font-size: 36rpx; font-weight: 800; color: #6B2E12; }
+.lh-sub { font-size: 23rpx; color: #8C3B1F; margin-top: 4rpx; }
+
+.container { padding-top: 24rpx; }
+.tip-card {
+  display: flex; align-items: center;
+  background: #FFF1DC; border: 1rpx solid #FFD9A8;
+  border-radius: 22rpx; padding: 18rpx 22rpx; margin-bottom: 24rpx;
+}
+.tip-icon { font-size: 36rpx; margin-right: 14rpx; }
+.tip-text { font-size: 23rpx; color: #8C5A2B; line-height: 1.6; flex: 1; }
+
+.picker-value { text-align: right; font-size: 27rpx; color: #6E4224; }
+.picker-value.ph { color: #C9A381; }
+.loc-box { text-align: right; }
+.loc-main { font-size: 27rpx; color: #6E4224; font-weight: 600; }
+.loc-sub { font-size: 20rpx; color: #C9A381; margin-top: 2rpx; }
+
+.photo-title { font-size: 27rpx; font-weight: 700; color: #6E4224; padding: 20rpx 0 16rpx; }
+.photo-sub { font-size: 21rpx; color: #C9A381; font-weight: 400; margin-left: 8rpx; }
+.photo-area {
+  width: 240rpx; height: 240rpx; border-radius: 24rpx;
+  border: 2rpx dashed #FFC08A; background: #FFF9F1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  margin-bottom: 24rpx; overflow: hidden;
+}
+.photo-img { width: 100%; height: 100%; }
+.photo-plus { font-size: 64rpx; color: #F47521; line-height: 1; }
+.photo-tip { font-size: 22rpx; color: #B08968; margin-top: 8rpx; }
+
+.ph { color: #C9A381; }
+.privacy { text-align: center; font-size: 21rpx; color: #C9A381; margin-bottom: 20rpx; }
+.btn-lost {
+  background: linear-gradient(135deg, #FF8A6E, #E4572E);
+  box-shadow: 0 10rpx 26rpx rgba(228,87,46,.3);
+}
+.publish-tip { text-align: center; font-size: 22rpx; color: #C9A381; padding: 18rpx 0 30rpx; }

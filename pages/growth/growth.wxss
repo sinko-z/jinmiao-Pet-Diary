@@ -1,0 +1,64 @@
+/* pages/growth/growth.wxss */
+.growth-hero {
+  background: linear-gradient(150deg, #FFE3C4, #FFB36B);
+  padding: 40rpx 34rpx;
+  border-radius: 0 0 44rpx 44rpx;
+}
+.gh-title { font-size: 40rpx; font-weight: 800; color: #5E3716; }
+.gh-sub { font-size: 24rpx; color: #7A4A1E; margin-top: 6rpx; }
+
+.container { padding-top: 40rpx; }
+.timeline { padding-left: 8rpx; }
+
+.tl-item { position: relative; padding-bottom: 10rpx; }
+.tl-dot {
+  position: absolute; left: -30rpx; top: 34rpx;
+  width: 22rpx; height: 22rpx; border-radius: 50%;
+  background: #fff; border: 6rpx solid #F47521;
+  box-shadow: 0 0 0 6rpx #FFE3C4;
+}
+.tl-card { margin-bottom: 26rpx; }
+.tl-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14rpx; }
+.tl-date { font-size: 30rpx; font-weight: 800; color: #6E4224; }
+.tl-time { font-size: 22rpx; color: #C9A381; }
+.tl-photo {
+  height: 320rpx; border-radius: 20rpx;
+  background: linear-gradient(135deg, #FFEFDE, #FFE3C4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30rpx; color: #C97B3C; margin-bottom: 14rpx;
+}
+.tl-note {
+  display: flex; align-items: center;
+  font-size: 28rpx; color: #6E4224; line-height: 1.7;
+  background: #FFF9F1; border-radius: 18rpx; padding: 20rpx;
+}
+.note-ph { font-size: 40rpx; margin-right: 16rpx; }
+.tl-meta { font-size: 22rpx; color: #B08968; margin-top: 14rpx; }
+
+.mask {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(60, 30, 10, .45);
+  display: flex; align-items: flex-end;
+}
+.sheet {
+  width: 100%; background: #FFFDF9;
+  border-radius: 40rpx 40rpx 0 0;
+  padding: 40rpx 32rpx calc(40rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+.sheet-title { font-size: 34rpx; font-weight: 800; color: #52311B; text-align: center; margin-bottom: 30rpx; }
+.upload-box {
+  height: 280rpx; border-radius: 24rpx;
+  border: 3rpx dashed #FFC08A; background: #FFF6EC;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.upload-plus { font-size: 72rpx; color: #F47521; line-height: 1; margin-bottom: 10rpx; }
+.upload-tip { font-size: 24rpx; color: #B08968; }
+.note-area {
+  width: 100%; box-sizing: border-box;
+  min-height: 150rpx; margin-top: 24rpx;
+  background: #FFF6EC; border-radius: 20rpx;
+  padding: 20rpx; font-size: 27rpx; color: #6E4224;
+}
+.ph { color: #C9A381; }
+.sheet-actions { display: flex; margin-top: 28rpx; }

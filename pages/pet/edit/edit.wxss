@@ -1,0 +1,48 @@
+/* pages/pet/edit/edit.wxss */
+.type-pick { display: flex; gap: 20rpx; margin-bottom: 24rpx; }
+.type-card {
+  flex: 1; position: relative;
+  background: #fff; border-radius: 26rpx; padding: 26rpx 22rpx;
+  border: 2rpx solid #FFE2C2; text-align: center;
+}
+.type-card.active { border-color: #F47521; background: #FFF3E6; box-shadow: 0 8rpx 22rpx rgba(244,117,33,.15); }
+.type-emoji { font-size: 48rpx; }
+.type-name { font-size: 28rpx; font-weight: 700; color: #6E4224; margin-top: 8rpx; }
+.type-desc { font-size: 20rpx; color: #B08968; margin-top: 4rpx; }
+.type-check {
+  position: absolute; top: 10rpx; right: 10rpx;
+  width: 34rpx; height: 34rpx; border-radius: 50%;
+  background: #F47521; color: #fff; font-size: 22rpx;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.photo-title { font-size: 27rpx; font-weight: 700; color: #6E4224; padding: 20rpx 0 16rpx; }
+.photo-sub { font-size: 21rpx; color: #C9A381; font-weight: 400; margin-left: 8rpx; }
+.photo-list { display: flex; flex-wrap: wrap; padding-bottom: 24rpx; }
+.photo-cell { width: 180rpx; height: 180rpx; margin: 0 16rpx 16rpx 0; position: relative; }
+.photo-img { width: 100%; height: 100%; border-radius: 20rpx; }
+.photo-del {
+  position: absolute; top: -12rpx; right: -12rpx;
+  width: 40rpx; height: 40rpx; border-radius: 50%;
+  background: rgba(80,40,10,.75); color: #fff;
+  font-size: 22rpx; display: flex; align-items: center; justify-content: center;
+}
+.photo-add {
+  width: 180rpx; height: 180rpx; border-radius: 20rpx;
+  border: 2rpx dashed #FFC08A; background: #FFF9F1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  color: #C97B3C; font-size: 22rpx;
+}
+.photo-plus { font-size: 52rpx; line-height: 1; margin-bottom: 6rpx; }
+
+.ph { color: #C9A381; }
+.gender-pick { display: flex; justify-content: flex-end; }
+.gender-chip {
+  padding: 8rpx 28rpx; border-radius: 30rpx; font-size: 25rpx;
+  border: 1rpx solid #FFE2C2; color: #8C5A2B; margin-left: 14rpx;
+}
+.gender-chip.active { background: #FFE4CC; color: #D96A1E; border-color: #FFB36B; font-weight: 700; }
+.picker-value { text-align: right; font-size: 27rpx; color: #6E4224; }
+.picker-value.ph { color: #C9A381; }
+
+.save-tip { text-align: center; font-size: 22rpx; color: #C9A381; padding: 20rpx 0 30rpx; }

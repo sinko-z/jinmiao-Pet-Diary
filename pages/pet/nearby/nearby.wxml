@@ -1,0 +1,67 @@
+<!--pages/pet/nearby/nearby.wxml-->
+<view class="page">
+  <view class="pn-hero">
+    <view class="pn-orb o1"></view>
+    <view class="pn-orb o2"></view>
+    <view class="pn-top">
+      <view>
+        <view class="pn-title">🐾 附近的宠物</view>
+        <view class="pn-sub">{{locating ? '正在定位附近…' : '附近发现 ' + list.length + ' 只毛孩子'}}</view>
+      </view>
+      <view class="pn-locate" bindtap="locate">📍 重新定位</view>
+    </view>
+    <view class="pn-filter">
+      <view class="pn-chip {{filter === item.key ? 'active' : ''}}" wx:for="{{filters}}" wx:key="key"
+        data-key="{{item.key}}" bindtap="onFilter">{{item.label}}</view>
+    </view>
+    <view class="pn-seg">
+      <view class="pn-seg-item {{view === 'list' ? 'active' : ''}}" data-view="list" bindtap="switchView">列表</view>
+      <view class="pn-seg-item {{view === 'map' ? 'active' : ''}}" data-view="map" bindtap="switchView">地图分布</view>
+    </view>
+  </view>
+
+  <!-- 定位隐私说明 -->
+  <view class="loc-privacy">
+    <view class="lp-icon">📍</view>
+    <view class="lp-text flex1">为向你展示附近的宠物，需要获取你的位置信息。仅在你授权后调用手机定位，<text class="lp-link" catchtap="onPrivacy">查看隐私政策</text></view>
+    <view class="lp-state {{located ? 'on' : ''}}">{{located ? '已定位' : '待定位'}}</view>
+  </view>
+
+  <view class="container">
+    <!-- 列表视图 -->
+    <block wx:if="{{view === 'list'}}">
+      <view class="np-card" wx:for="{{list}}" wx:key="id">
+        <view class="np-avatar" style="background:{{item.color}}1A">{{item.emoji}}</view>
+        <view class="np-body flex1">
+          <view class="np-name-row">
+            <text class="np-name">{{item.name}}</text>
+            <text class="tag {{item.typeText === '流浪救助' ? 'tag-red' : 'tag-orange'}}">{{item.typeText}}</text>
+          </view>
+          <view class="np-meta">{{item.species}} · {{item.gender}} · {{item.ageText}}</view>
+          <view class="np-loc">📍 {{item.location}} · {{item.distance}}</view>
+          <view class="np-intro">{{item.intro}}</view>
+          <view class="np-tags">
+            <text class="tag" wx:for="{{item.tags}}" wx:for-item="tg" wx:key="*this">{{tg}}</text>
+          </view>
+        </view>
+        <view class="np-actions">
+          <view class="np-btn friend" data-id="{{item.id}}" catchtap="addFriend">🐾 交友</view>
+          <view class="np-btn" data-id="{{item.id}}" bindtap="viewPet">查看</view>
+        </view>
+      </view>
+      <view class="empty" wx:if="{{!list.length}}">
+        <view class="empty-icon">🔎</view>
+        <view class="empty-title">附近暂无符合条件的宠物</view>
+      </view>
+      <view class="pn-tip"><paw size="30" color="#F2B04C" /> 遇到流浪动物，可先投喂并在首页发布救助档案</view>
+    </block>
+
+    <!-- 地图视图 -->
+    <view class="pn-map-wrap" wx:if="{{view === 'map'}}">
+      <map class="pn-map" latitude="{{center.latitude}}" longitude="{{center.longitude}}"
+        markers="{{markers}}" scale="15" show-location></map>
+      <view class="pn-legend">📍 点击爪印标记，查看附近宠物信息</view>
+      <view class="pn-tip" style="margin-top:16rpx"><paw size="30" color="#F2B04C" /> 宠物位置为最近一次打卡/发布时所在区域</view>
+    </view>
+  </view>
+</view>

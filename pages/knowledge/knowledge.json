@@ -1,0 +1,4 @@
+{
+  "navigationBarTitleText": "养宠知识库",
+  "usingComponents": { "paw": "/components/paw/paw" }
+}

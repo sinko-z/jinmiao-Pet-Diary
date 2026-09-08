@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "金喵宠物日记",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#FFF7EE",
+  "usingComponents": { "paw": "/components/paw/paw" }
+}

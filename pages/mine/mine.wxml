@@ -1,0 +1,170 @@
+<!--pages/mine/mine.wxml-->
+<view class="page">
+  <!-- 个人头部：未登录 / 已登录 -->
+  <view class="me-head">
+    <view class="me-orb o1"></view>
+    <view class="me-orb o2"></view>
+    <view class="me-orb o3"><view class="paw-deco"></view></view>
+    <view class="me-top">
+      <block wx:if="{{login && user}}">
+        <view class="avatar avatar-ph me-avatar" style="background:{{user.avatarColor}};width:120rpx;height:120rpx;font-size:52rpx"
+          bindtap="editProfile">{{user.firstChar}}</view>
+        <view class="me-info flex1">
+          <view class="me-name">{{user.nickName}} <text class="me-v">🐾</text></view>
+          <view class="me-bio">{{user.bio}}</view>
+        </view>
+        <view class="me-edit" bindtap="editProfile">编辑资料</view>
+      </block>
+      <block wx:else>
+        <view class="avatar avatar-ph me-avatar" style="width:120rpx;height:120rpx;font-size:52rpx">喵</view>
+        <view class="me-info flex1">
+          <view class="me-name">未登录的访客</view>
+          <view class="me-bio">登录后可参与记录、评分、邀请好友</view>
+        </view>
+        <view class="me-edit strong" bindtap="goLogin">登录</view>
+      </block>
+    </view>
+    <view class="me-stats">
+      <view class="me-stat" bindtap="goCommunity">
+        <view class="me-num">{{myPets.length}}</view><view class="me-label">协管档案</view>
+      </view>
+      <view class="me-div"></view>
+      <view class="me-stat" bindtap="goCommunity">
+        <view class="me-num">{{myMoments}}</view><view class="me-label">我的动态</view>
+      </view>
+      <view class="me-div"></view>
+      <view class="me-stat" bindtap="goKnowledge">
+        <view class="me-num">{{collectedCount}}</view><view class="me-label">收藏文章</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="container">
+    <!-- 账号信息（登录后展示微信登录信息） -->
+    <view class="account-card" wx:if="{{login && user}}">
+      <view class="ac-row">
+        <view class="ac-label">👤 微信账号</view>
+        <view class="ac-value">{{user.nickName}}</view>
+      </view>
+      <view class="ac-row">
+        <view class="ac-label">🔐 登录状态</view>
+        <view class="ac-value"><text class="tag tag-green">已登录</text> <text class="ac-sub">{{user.openid}}</text></view>
+      </view>
+      <view class="ac-row">
+        <view class="ac-label">🛡️ 隐私说明</view>
+        <view class="ac-value ac-note">仅获取昵称与头像；定位仅在打卡/附近功能征得同意后使用；手机号等仅协作者可见</view>
+      </view>
+      <view class="ac-actions">
+        <view class="ac-btn" bindtap="editProfile">✎ 编辑资料</view>
+        <view class="ac-btn ghost" bindtap="goPetFamily">🐾 我的宠物家庭</view>
+      </view>
+    </view>
+
+    <!-- 登录引导条（未登录） -->
+    <view class="login-bar" wx:if="{{!login}}" bindtap="goLogin">
+      <view class="lb-icon">🐾</view>
+      <view class="lb-body flex1">
+        <view class="lb-title">登录解锁完整功能</view>
+        <view class="lb-desc">微信一键登录 · 记录协作 · 商家打分 · 邀请家人</view>
+      </view>
+      <view class="lb-btn">去登录</view>
+    </view>
+
+    <!-- 邀请家人入口 -->
+    <view class="invite-banner" bindtap="inviteFamily">
+      <view class="ib-paw">🐾</view>
+      <view class="ib-body flex1">
+        <view class="ib-title">邀请好友加入宠物家庭</view>
+        <view class="ib-desc">和家人朋友一起记录，共同守护毛孩子</view>
+      </view>
+      <view class="ib-btn">去邀请</view>
+    </view>
+
+    <!-- 商家中心入口 -->
+    <view class="merchant-bar" bindtap="goMerchant">
+      <view class="mb-logo">🏪</view>
+      <view class="mb-body flex1">
+        <view class="mb-title">{{merchantApp ? '我的商家中心' : '我是宠物商家 · 我要入驻'}}</view>
+        <view class="mb-desc">{{merchantApp && merchantApp.status === 'verified' ? '管理店铺 · 查看评价与营业数据' : '上传资质审核，附近铲屎官就能找到你'}}</view>
+      </view>
+      <view class="tag {{merchantApp && merchantApp.status === 'verified' ? 'tag-orange' : 'tag-gold'}}">
+        {{merchantApp && merchantApp.status === 'verified' ? '已入驻' : '去入驻'}}
+      </view>
+    </view>
+
+    <!-- 我的档案 -->
+    <view class="card">
+      <view class="section-head" style="margin-top:0">
+        <view class="section-title">我参与的档案</view>
+        <view class="link-more" data-url="/pages/pet/edit/edit" bindtap="goAdd">＋ 新建</view>
+      </view>
+      <view class="mini-pet" wx:for="{{myPets}}" wx:key="id" data-id="{{item.id}}" bindtap="goPet">
+        <view class="mini-cover" style="background:{{item.coverGradient}}">{{item.emoji}}</view>
+        <view class="mini-info flex1">
+          <view class="mini-name">{{item.name}}</view>
+          <view class="mini-desc">{{item.typeText}} · {{item.species}}</view>
+        </view>
+        <view class="tag {{item.type === 'stray' ? 'tag-red' : 'tag-orange'}}">{{item.type === 'stray' ? '流浪救助' : '家养'}}</view>
+        <view class="cell-arrow">›</view>
+      </view>
+    </view>
+
+    <!-- 快捷功能 -->
+    <view class="card">
+      <view class="cell" bindtap="goKnowledge">
+        <view class="cell-icon" style="background:#FFF3D6">📚</view>
+        <view class="cell-label flex1">我的收藏 · 养宠知识</view>
+        <view class="cell-arrow">›</view>
+      </view>
+      <view class="cell" bindtap="goNearby">
+        <view class="cell-icon" style="background:#EAF2DF">📍</view>
+        <view class="cell-label flex1">附近宠物服务</view>
+        <view class="cell-arrow">›</view>
+      </view>
+      <view class="cell" bindtap="goCommunity">
+        <view class="cell-icon" style="background:#FFE9D2">💬</view>
+        <view class="cell-label flex1">我发布的动态</view>
+        <view class="cell-arrow">›</view>
+      </view>
+      <view class="cell" bindtap="about">
+        <view class="cell-icon" style="background:#FFE3DA">ℹ️</view>
+        <view class="cell-label flex1">关于小程序</view>
+        <view class="cell-arrow">›</view>
+      </view>
+    </view>
+
+    <!-- 通知设置 -->
+    <view class="card">
+      <view class="section-head" style="margin-top:0">
+        <view class="section-title">消息提醒</view>
+        <view class="link-more">基于微信订阅消息</view>
+      </view>
+      <view class="cell">
+        <view class="cell-icon" style="background:#FFE9D2">🍚</view>
+        <view class="cell-label flex1">投喂提醒</view>
+        <switch checked="{{notify.feed}}" color="#F47521" data-key="feed" bindchange="onNotify" />
+      </view>
+      <view class="cell">
+        <view class="cell-icon" style="background:#FFE3DA">💉</view>
+        <view class="cell-label flex1">健康提醒（疫苗/驱虫）</view>
+        <switch checked="{{notify.health}}" color="#F47521" data-key="health" bindchange="onNotify" />
+      </view>
+      <view class="cell">
+        <view class="cell-icon" style="background:#F5E1D6">🐾</view>
+        <view class="cell-label flex1">走失推送</view>
+        <switch checked="{{notify.lost}}" color="#F47521" data-key="lost" bindchange="onNotify" />
+      </view>
+    </view>
+
+    <view class="paw-dots"><paw size="40" color="#FFD0A8" /><paw size="52" color="#FFB36B" /><paw size="40" color="#FFD0A8" /></view>
+
+    <!-- 退出登录 -->
+    <view class="logout-btn" wx:if="{{login}}" bindtap="logout">退出登录</view>
+
+    <view class="foot-logo">
+      <view class="foot-emoji">🐾</view>
+      <view class="foot-name">金喵宠物日记 · 暖阳版 v1.1.0</view>
+      <view class="foot-slogan">用心记录，温柔相伴每一只毛孩子</view>
+    </view>
+  </view>
+</view>

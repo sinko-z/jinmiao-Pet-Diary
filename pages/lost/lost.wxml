@@ -1,0 +1,75 @@
+<!--pages/lost/lost.wxml-->
+<view class="page">
+  <view class="lost-hero">
+    <view class="lh-icon">🐾</view>
+    <view class="lh-body">
+      <view class="lh-title">宠物走失，急寻帮助</view>
+      <view class="lh-sub">一键发布，推送给附近用户帮忙留意</view>
+    </view>
+  </view>
+
+  <view class="container">
+    <!-- 提示卡片 -->
+    <view class="tip-card">
+      <view class="tip-icon">💡</view>
+      <view class="tip-text">发布前请确认：宠物照片清晰、走失位置准确。联系方式仅登录用户可见。</view>
+    </view>
+
+    <view class="form-card">
+      <view class="form-item">
+        <view class="form-label">走失宠物<text class="req">*</text></view>
+        <picker mode="selector" range="{{petOptions}}" range-key="label" value="{{petIndex}}" bindchange="onPetPick">
+          <view class="form-value picker-value {{petIndex >= 0 ? '' : 'ph'}}">
+            {{petIndex >= 0 ? petOptions[petIndex].label : '选择宠物档案'}}<text class="form-arrow">▾</text>
+          </view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <view class="form-label">走失时间</view>
+        <picker mode="date" value="{{form.time}}" bindchange="onTime">
+          <view class="form-value picker-value">{{form.time}}<text class="form-arrow">▾</text></view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <view class="form-label">最后出现位置</view>
+        <view class="form-value loc-box" bindtap="chooseLocation">
+          <view class="loc-main">{{form.lastPlace || '点击地图选点'}}</view>
+          <view class="loc-sub">{{form.lastAddress}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 走失照片 -->
+    <view class="form-card">
+      <view class="photo-title">走失照片<text class="photo-sub">（越清晰越好找）</text></view>
+      <view class="photo-area" bindtap="choosePhoto">
+        <image wx:if="{{photo}}" src="{{photo}}" mode="aspectFill" class="photo-img" />
+        <block wx:else>
+          <view class="photo-plus">＋</view>
+          <view class="photo-tip">上传宠物近照</view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 描述 -->
+    <view class="form-card">
+      <view class="form-item" style="align-items:flex-start;padding:20rpx 0">
+        <view class="form-label" style="margin-top:6rpx">特征描述</view>
+        <textarea class="form-textarea" placeholder="品种、体型、毛色、性格、是否佩戴项圈…" placeholder-class="ph"
+          value="{{form.desc}}" data-key="desc" bindinput="onInput" maxlength="300" />
+      </view>
+      <view class="form-item">
+        <view class="form-label">联系方式<text class="req">*</text></view>
+        <input class="form-input" type="number" placeholder="手机号 / 微信号" placeholder-class="ph"
+          value="{{form.contact}}" data-key="contact" bindinput="onInput" />
+      </view>
+    </view>
+
+    <view class="privacy">🔒 联系方式仅对登录用户展示，公开页面不显示</view>
+
+    <button class="btn btn-primary btn-block btn-lost" bindtap="publish" disabled="{{submitting}}">
+      🐾 一键发布走失信息
+    </button>
+    <view class="publish-tip">发布后将推送提醒附近用户 · 可同步分享至社区动态</view>
+  </view>
+</view>

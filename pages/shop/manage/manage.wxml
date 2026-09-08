@@ -1,0 +1,105 @@
+<!--pages/shop/manage/manage.wxml-->
+<view class="page">
+  <!-- 返回按钮 -->
+  <view class="flt-back" bindtap="goBack">‹</view>
+
+  <!-- 未登录 -->
+  <view class="container" wx:if="{{!login}}">
+    <view class="card empty-card">
+      <view class="empty-icon">🐾</view>
+      <view class="empty-title">登录后使用商家中心</view>
+      <view class="empty-desc">入驻商家可管理店铺、查看评价与营业数据</view>
+      <button class="btn btn-primary" bindtap="goLogin">微信登录</button>
+    </view>
+  </view>
+
+  <!-- 已登录：暂无入驻 -->
+  <view class="container" wx:elif="{{!app}}">
+    <view class="card empty-card">
+      <view class="empty-icon">🏪</view>
+      <view class="empty-title">你还没有入驻宠物商家</view>
+      <view class="empty-desc">提交营业执照与身份信息，审核通过即可开店营业</view>
+      <button class="btn btn-primary" bindtap="goApply">立即申请入驻</button>
+    </view>
+  </view>
+
+  <!-- 已登录：审核中 -->
+  <view class="container" wx:elif="{{app.status === 'reviewing'}}">
+    <view class="card status-card">
+      <paw size="88" color="#F2B04C" />
+      <view class="st-title">资质审核中</view>
+      <view class="st-desc">已收到「{{app.shopName}}」的申请，预计 1-3 个工作日完成</view>
+      <view class="app-info">
+        <view class="ai-row"><text class="ai-label">商家类型</text><text class="ai-value">{{app.category}}</text></view>
+        <view class="ai-row"><text class="ai-label">申请时间</text><text class="ai-value">{{app.submitTime}}</text></view>
+        <view class="ai-row"><text class="ai-label">当前状态</text><text class="ai-value tag tag-gold">人工审核中</text></view>
+      </view>
+      <view class="st-steps">
+        <view class="step on"><view class="dot">✓</view><text>提交资料</text></view>
+        <view class="step-line on"></view>
+        <view class="step on"><view class="dot">✓</view><text>审核中</text></view>
+        <view class="step-line"></view>
+        <view class="step"><view class="dot">3</view><text>开店营业</text></view>
+      </view>
+      <button class="btn btn-primary btn-block" bindtap="goIndex">先去逛逛宠物店</button>
+    </view>
+  </view>
+
+  <!-- 已登录：入驻成功（演示数据店铺） -->
+  <view class="container" wx:else>
+    <view class="mgr-head">
+      <paw size="60" color="#FFD9A0" rotate="-20" />
+      <view class="mgr-info">
+        <view class="mgr-greet">欢迎回来，老板</view>
+        <view class="mgr-shop" bindtap="goDetail">{{shop.name}} ›</view>
+      </view>
+      <view class="tag tag-orange">营业中</view>
+    </view>
+
+    <!-- 数据卡片 -->
+    <view class="stat-grid">
+      <view class="stat-box"><view class="sb-num">{{stats.weekOrders}}</view><view class="sb-label">本周订单</view></view>
+      <view class="stat-box"><view class="sb-num" style="font-size:34rpx">{{stats.weekIncome}}</view><view class="sb-label">本周营收</view></view>
+      <view class="stat-box"><view class="sb-num">{{stats.avgRating}}</view><view class="sb-label">平均评分</view></view>
+      <view class="stat-box"><view class="sb-num">{{stats.weekVisits}}</view><view class="sb-label">本周访问</view></view>
+    </view>
+
+    <!-- 快捷管理 -->
+    <view class="card">
+      <view class="cell" bindtap="editShop">
+        <view class="cell-icon" style="background:#FFF3D6">📝</view>
+        <view class="cell-label flex1">编辑店铺资料</view><view class="cell-arrow">›</view>
+      </view>
+      <view class="cell" bindtap="goDetail">
+        <view class="cell-icon" style="background:#FFE9D2">⭐</view>
+        <view class="cell-label flex1">用户评价管理</view><view class="cell-arrow">›</view>
+      </view>
+      <view class="cell" bindtap="goNearby">
+        <view class="cell-icon" style="background:#EAF2DF">📍</view>
+        <view class="cell-label flex1">展示位置与附近流量</view><view class="cell-arrow">›</view>
+      </view>
+      <view class="cell">
+        <view class="cell-icon" style="background:#FFE3DA">🔔</view>
+        <view class="cell-label flex1">新订单 / 新评价提醒</view>
+        <switch checked="{{noticeSwitch}}" color="#F47521" bindchange="toggleNotice" />
+      </view>
+    </view>
+
+    <!-- 最新评价 -->
+    <view class="section-head">
+      <view class="section-title">最新评价</view>
+      <view class="link-more" bindtap="goDetail">查看全部</view>
+    </view>
+    <view class="review" wx:for="{{reviews}}" wx:key="id">
+      <view class="rv-head">
+        <view class="avatar avatar-ph" style="background:{{item.avatarColor}};width:56rpx;height:56rpx;font-size:24rpx">{{item.userFirst}}</view>
+        <view class="rv-name flex1">{{item.user}}</view>
+        <view class="rv-stars">
+          <text wx:for="{{item.fullArr}}" wx:key="*this">★</text>
+          <text wx:for="{{item.emptyArr}}" wx:key="*this" class="gray">★</text>
+        </view>
+      </view>
+      <view class="rv-text">{{item.text}}</view>
+    </view>
+  </view>
+</view>

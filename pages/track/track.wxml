@@ -1,0 +1,86 @@
+<!--pages/track/track.wxml-->
+<view class="page track-page">
+
+  <!-- 打卡输入栏 -->
+  <view class="checkin-bar">
+    <input class="checkin-input" placeholder="写句打卡备注（可选），如：在小区花园玩" placeholder-class="ph"
+      value="{{note}}" bindinput="onNote" confirm-type="done" />
+    <button class="btn btn-primary btn-sm" bindtap="checkin">📌 定位打卡</button>
+  </view>
+
+  <!-- 视图切换 -->
+  <view class="seg">
+    <view class="seg-item {{view === 'timeline' ? 'active' : ''}}" data-view="timeline" bindtap="switchView">时间线</view>
+    <view class="seg-item {{view === 'map' ? 'active' : ''}}" data-view="map" bindtap="switchView">地图轨迹</view>
+    <view class="seg-item {{view === 'heat' ? 'active' : ''}}" data-view="heat" bindtap="switchView">活动热力</view>
+  </view>
+
+  <view class="toolbar">
+    <picker mode="selector" range="{{dateOptions}}" bindchange="onDateChange">
+      <view class="date-pick">📅 {{dateFilter}} ▾</view>
+    </picker>
+    <view class="toolbar-tip">共 {{list.length}} 次打卡</view>
+  </view>
+
+  <!-- 时间线视图 -->
+  <view class="container" wx:if="{{view === 'timeline'}}">
+    <view class="timeline">
+      <view class="tl-item" wx:for="{{list}}" wx:key="id">
+        <view class="tl-dot {{item.type}}"></view>
+        <view class="card tl-card">
+          <view class="tl-top">
+            <view class="tl-time">{{item.time}}</view>
+            <view class="tl-tag">{{item.type === 'feed' ? '🍚 投喂' : item.type === 'walk' ? '🚶 遛弯' : item.type === 'medical' ? '💉 就医' : item.type === 'wait' ? '🕐 等待' : '🎮 玩耍'}}</view>
+          </view>
+          <view class="tl-loc">📍 {{item.location}}</view>
+          <view class="tl-addr">{{item.address}}</view>
+          <view class="tl-note" wx:if="{{item.note}}">{{item.note}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 地图视图 -->
+  <view class="map-wrap" wx:if="{{view === 'map'}}">
+    <map
+      class="map"
+      latitude="{{center.latitude}}"
+      longitude="{{center.longitude}}"
+      markers="{{markers}}"
+      polyline="{{polyline}}"
+      scale="15"
+      show-location
+    ></map>
+    <view class="map-legend">
+      <view class="legend-line"></view><text>按打卡先后连线</text>
+      <view class="legend-pin"></view><text>点击标记看备注</text>
+    </view>
+  </view>
+
+  <!-- 热力视图（演示聚类热力） -->
+  <view class="heat-wrap" wx:if="{{view === 'heat'}}">
+    <view class="heat-card">
+      <view class="heat-head">
+        <view class="heat-title">🔥 活动范围热力图</view>
+        <view class="heat-sub">按近期打卡点聚类 · 颜色越深活动越频繁</view>
+      </view>
+      <view class="heat-grid">
+        <view
+          wx:for="{{heatCells}}"
+          wx:key="id"
+          class="heat-cell {{item.hot ? 'on' : ''}}"
+          style="{{item.hot ? 'opacity:' + item.strength : ''}}"
+        ></view>
+      </view>
+      <view class="heat-legend">
+        <view class="hl"><view class="hl-bar c1"></view>少</view>
+        <view class="hl"><view class="hl-bar c2"></view></view>
+        <view class="hl"><view class="hl-bar c3"></view></view>
+        <view class="hl"><view class="hl-bar c4"></view>频繁</view>
+      </view>
+    </view>
+    <view class="heat-tip">📍 主要活动区域：金桂小区花园 · 幸福路一带</view>
+  </view>
+
+  <view class="fab" bindtap="chooseOnMap">🗺️</view>
+</view>

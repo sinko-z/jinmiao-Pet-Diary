@@ -1,0 +1,125 @@
+<!--pages/pet/edit/edit.wxml-->
+<view class="page">
+  <view class="container">
+
+    <!-- 类型分类 -->
+    <view class="type-pick">
+      <view
+        class="type-card {{form.type === item.key ? 'active' : ''}}"
+        wx:for="{{typeOptions}}" wx:key="key"
+        data-key="{{item.key}}" bindtap="onTypeTap">
+        <view class="type-emoji">{{item.emoji}}</view>
+        <view class="type-name">{{item.name}}</view>
+        <view class="type-desc">{{item.desc}}</view>
+        <view class="type-check" wx:if="{{form.type === item.key}}">✓</view>
+      </view>
+    </view>
+
+    <!-- 照片 -->
+    <view class="form-card">
+      <view class="photo-title">档案照片<text class="photo-sub">（可多张，第一张为封面）</text></view>
+      <view class="photo-list">
+        <view class="photo-cell" wx:for="{{form.photos}}" wx:key="*this">
+          <image src="{{item}}" mode="aspectFill" class="photo-img" data-url="{{item}}" bindtap="previewPhoto" />
+          <view class="photo-del" data-index="{{index}}" catchtap="removePhoto">✕</view>
+        </view>
+        <view class="photo-add" bindtap="choosePhoto" wx:if="{{form.photos.length < 9}}">
+          <view class="photo-plus">＋</view>
+          <text>添加照片</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 基础信息 -->
+    <view class="form-card">
+      <view class="form-item">
+        <view class="form-label">宠物昵称<text class="req">*</text></view>
+        <input class="form-input" placeholder="如：团子" placeholder-class="ph"
+          value="{{form.name}}" data-key="name" bindinput="onInput" />
+      </view>
+      <view class="form-item">
+        <view class="form-label">动物种类</view>
+        <picker mode="selector" range="{{kindOptions}}" value="{{kindIndex}}" bindchange="onKindChange">
+          <view class="form-value picker-value">{{kindLabel}}<text class="form-arrow">▾</text></view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <view class="form-label">品种</view>
+        <picker mode="selector" range="{{breedOptions}}" value="{{breedIndex}}" bindchange="onBreedChange">
+          <view class="form-value picker-value {{form.breed ? '' : 'ph'}}">
+            {{form.breed || '请选择品种'}}<text class="form-arrow">▾</text>
+          </view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <view class="form-label">具体品系</view>
+        <input class="form-input" placeholder="如：蓝猫（可选填）" placeholder-class="ph"
+          value="{{form.species}}" data-key="species" bindinput="onInput" />
+      </view>
+      <view class="form-item">
+        <view class="form-label">性别</view>
+        <view class="form-value gender-pick">
+          <view class="gender-chip {{form.gender === '弟弟' ? 'active' : ''}}" data-value="弟弟" bindtap="onGenderTap">♂ 弟弟</view>
+          <view class="gender-chip {{form.gender === '妹妹' ? 'active' : ''}}" data-value="妹妹" bindtap="onGenderTap">♀ 妹妹</view>
+        </view>
+      </view>
+      <view class="form-item">
+        <view class="form-label">出生日期</view>
+        <picker mode="date" value="{{form.birthday}}" start="2010-01-01" end="2030-12-31" bindchange="onBirthday">
+          <view class="form-value picker-value {{form.birthday ? '' : 'ph'}}">
+            {{form.birthday || '选择出生日期'}}<text class="form-arrow">▾</text>
+          </view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <view class="form-label">体重 (kg)</view>
+        <input class="form-input" type="digit" placeholder="如：4.6" placeholder-class="ph"
+          value="{{form.weight}}" data-key="weight" bindinput="onInput" />
+      </view>
+    </view>
+
+    <!-- 习惯爱好 -->
+    <view class="form-card">
+      <view class="form-item">
+        <view class="form-label">爱好习惯</view>
+        <input class="form-input" placeholder="如：喜欢玩球、怕打雷" placeholder-class="ph"
+          value="{{form.hobbies}}" data-key="hobbies" bindinput="onInput" />
+      </view>
+      <view class="form-item">
+        <view class="form-label">爱吃的</view>
+        <input class="form-input" placeholder="如：鸡肉、三文鱼" placeholder-class="ph"
+          value="{{form.favoriteFood}}" data-key="favoriteFood" bindinput="onInput" />
+      </view>
+      <view class="form-item">
+        <view class="form-label">不爱吃 / 忌口</view>
+        <input class="form-input" placeholder="如：牛奶、巧克力（防误喂）" placeholder-class="ph"
+          value="{{form.noFoods}}" data-key="noFoods" bindinput="onInput" />
+      </view>
+      <view class="form-item" style="align-items:flex-start;padding:20rpx 0">
+        <view class="form-label" style="margin-top:6rpx">注意事项</view>
+        <textarea class="form-textarea" placeholder="过敏史、慢性病、性格雷区、照护要点…" placeholder-class="ph"
+          value="{{form.notes}}" data-key="notes" bindinput="onInput" maxlength="200" />
+      </view>
+      <view class="form-item" style="align-items:flex-start;padding:20rpx 0">
+        <view class="form-label" style="margin-top:6rpx">小简介</view>
+        <textarea class="form-textarea" placeholder="写几句介绍这只小可爱吧（性格、来历…）"
+          placeholder-class="ph" value="{{form.intro}}" data-key="intro" bindinput="onInput" maxlength="200" />
+      </view>
+    </view>
+
+    <!-- 状态开关 -->
+    <view class="form-card">
+      <view class="form-item">
+        <view class="form-label">已绝育</view>
+        <switch checked="{{form.sterilized}}" color="#F47521" data-key="sterilized" bindchange="onSwitch" />
+      </view>
+      <view class="form-item">
+        <view class="form-label">已接种疫苗</view>
+        <switch checked="{{form.vaccinated}}" color="#F47521" data-key="vaccinated" bindchange="onSwitch" />
+      </view>
+    </view>
+
+    <button class="btn btn-primary btn-block" bindtap="save">{{isEdit ? '保存修改' : '创建档案'}}</button>
+    <view class="save-tip">📌 创建后档案对所有用户公开可见，可邀请好友共同记录</view>
+  </view>
+</view>

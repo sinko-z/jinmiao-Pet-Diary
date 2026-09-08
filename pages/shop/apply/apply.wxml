@@ -1,0 +1,124 @@
+<!--pages/shop/apply/apply.wxml-->
+<view class="page">
+  <view class="flt-back" bindtap="goBack">‹</view>
+  <view class="ap-hero">
+    <paw size="88" color="#FFFFFF" rotate="14" />
+    <view class="ap-title">宠物商家入驻</view>
+    <view class="ap-sub">让附近更多铲屎官找到你的好店</view>
+  </view>
+
+  <!-- 已提交审核 -->
+  <view class="container" wx:if="{{existing}}">
+    <view class="card status-card">
+      <view class="st-icon">🕐</view>
+      <view class="st-title">资质审核中</view>
+      <view class="st-desc">已收到「{{existing.shopName}}」的入驻申请，预计 1-3 个工作日完成审核</view>
+      <view class="st-steps">
+        <view class="step on"><view class="dot">1</view><text>提交资料</text></view>
+        <view class="step-line on"></view>
+        <view class="step on"><view class="dot">2</view><text>人工审核</text></view>
+        <view class="step-line"></view>
+        <view class="step"><view class="dot">3</view><text>审核通过</text></view>
+      </view>
+      <button class="btn btn-primary btn-block" bindtap="goManage">查看审核进度</button>
+    </view>
+    <view class="ap-note">🐾 审核期间请保持电话畅通，客服可能与你联系核实信息</view>
+  </view>
+
+  <!-- 申请表 -->
+  <view class="container" wx:else>
+    <!-- 流程说明 -->
+    <view class="flow-row">
+      <view class="flow-step"><view class="fs-num">1</view><text>填写资料</text></view>
+      <view class="flow-line"></view>
+      <view class="flow-step"><view class="fs-num">2</view><text>资质审核</text></view>
+      <view class="flow-line"></view>
+      <view class="flow-step"><view class="fs-num">3</view><text>开店营业</text></view>
+    </view>
+
+    <!-- 商家类型 -->
+    <view class="form-card">
+      <view class="fc-title">商家类型</view>
+      <view class="cat-pick">
+        <view class="cat-item {{form.category === item.key ? 'active' : ''}}" wx:for="{{categories}}" wx:key="key"
+          data-key="{{item.key}}" bindtap="onCat">
+          <view class="cat-emoji">{{item.emoji}}</view>
+          <view class="cat-name">{{item.name}}</view>
+          <view class="cat-desc">{{item.desc}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 店铺信息 -->
+    <view class="form-card">
+      <view class="fc-title">店铺信息</view>
+      <view class="form-item">
+        <view class="form-label">店铺名称<text class="req">*</text></view>
+        <input class="form-input" placeholder="如：暖暖宠物生活馆" placeholder-class="ph"
+          value="{{form.shopName}}" data-key="shopName" bindinput="onInput" />
+      </view>
+      <view class="form-item">
+        <view class="form-label">详细地址</view>
+        <input class="form-input" placeholder="街道门牌号" placeholder-class="ph"
+          value="{{form.address}}" data-key="address" bindinput="onInput" />
+      </view>
+      <view class="form-item">
+        <view class="form-label">联系电话</view>
+        <input class="form-input" type="number" placeholder="用于用户联系你" placeholder-class="ph"
+          value="{{form.phone}}" data-key="phone" bindinput="onInput" />
+      </view>
+      <view class="form-item" style="align-items:flex-start;padding:20rpx 0">
+        <view class="form-label" style="margin-top:6rpx">店铺介绍</view>
+        <textarea class="form-textarea" placeholder="介绍一下你的店铺特色与优势…" placeholder-class="ph"
+          value="{{form.intro}}" data-key="intro" bindinput="onInput" maxlength="200" />
+      </view>
+    </view>
+
+    <!-- 资质材料 -->
+    <view class="form-card">
+      <view class="fc-title">资质材料<text class="fc-required">（用于平台审核，严格保密）</text></view>
+
+      <view class="upload-item">
+        <view class="up-label">营业执照<text class="req">*</text></view>
+        <view class="up-desc">需清晰可辨，含统一社会信用代码</view>
+        <view class="up-box {{form.license ? 'filled' : ''}}" data-key="license" bindtap="upload">
+          <image wx:if="{{form.license}}" src="{{form.license}}" mode="aspectFill" class="up-img"
+            data-url="{{form.license}}" catchtap="preview" />
+          <block wx:else>
+            <view class="up-plus">📄</view>
+            <view class="up-tip">上传营业执照</view>
+          </block>
+        </view>
+      </view>
+
+      <view class="upload-row">
+        <view class="upload-item half">
+          <view class="up-label">身份证人像面<text class="req">*</text></view>
+          <view class="up-box sm {{form.idcardFront ? 'filled' : ''}}" data-key="idcardFront" bindtap="upload">
+            <image wx:if="{{form.idcardFront}}" src="{{form.idcardFront}}" mode="aspectFill" class="up-img"
+              data-url="{{form.idcardFront}}" catchtap="preview" />
+            <block wx:else>
+              <view class="up-plus">🪪</view>
+              <view class="up-tip">人像面</view>
+            </block>
+          </view>
+        </view>
+        <view class="upload-item half">
+          <view class="up-label">身份证国徽面<text class="req">*</text></view>
+          <view class="up-box sm {{form.idcardBack ? 'filled' : ''}}" data-key="idcardBack" bindtap="upload">
+            <image wx:if="{{form.idcardBack}}" src="{{form.idcardBack}}" mode="aspectFill" class="up-img"
+              data-url="{{form.idcardBack}}" catchtap="preview" />
+            <block wx:else>
+              <view class="up-plus">🪪</view>
+              <view class="up-tip">国徽面</view>
+            </block>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="sec-tip">🔒 营业执照与身份证信息仅用于商家资质审核，平台承诺严格保密，不对外公开</view>
+    <button class="btn btn-primary btn-block" bindtap="submit">提交入驻申请</button>
+    <view class="bottom-note">提交即表示同意《商家入驻协议》及平台审核规则</view>
+  </view>
+</view>

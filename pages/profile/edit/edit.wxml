@@ -1,0 +1,35 @@
+<!--pages/profile/edit/edit.wxml-->
+<view class="page" wx:if="{{user}}">
+  <view class="pe-hero">
+    <view class="avatar avatar-ph pe-avatar" style="background:{{user.avatarColor}};width:150rpx;height:150rpx;font-size:64rpx">
+      {{user.firstChar || '我'}}
+    </view>
+    <view class="pe-title">个人资料</view>
+    <view class="pe-sub">展示在小程序内的公开信息</view>
+  </view>
+
+  <view class="container">
+    <view class="card">
+      <view class="color-label">头像颜色</view>
+      <view class="color-row">
+        <view class="color-dot {{user.avatarColor === item ? 'on' : ''}}" wx:for="{{colors}}" wx:key="*this"
+          style="background:{{item}}" data-color="{{item}}" bindtap="pickColor"></view>
+      </view>
+    </view>
+
+    <view class="form-card">
+      <view class="form-item">
+        <view class="form-label">昵称</view>
+        <input class="form-input" placeholder="你的昵称" placeholder-class="ph" value="{{nickName}}" bindinput="onNick" maxlength="16" />
+      </view>
+      <view class="form-item" style="align-items:flex-start;padding:20rpx 0">
+        <view class="form-label" style="margin-top:6rpx">个性签名</view>
+        <textarea class="form-textarea" placeholder="介绍一下自己吧～" placeholder-class="ph"
+          value="{{bio}}" bindinput="onBio" maxlength="60" />
+      </view>
+    </view>
+
+    <view class="pe-openid">🔐 当前账号：{{user.openid}}</view>
+    <button class="btn btn-primary btn-block" bindtap="save">保存资料</button>
+  </view>
+</view>

@@ -1,0 +1,82 @@
+/* pages/shop/apply/apply.wxss */
+.ap-hero {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: linear-gradient(160deg, #FFD9A0, #F47521);
+  padding: 60rpx 0 52rpx;
+  border-radius: 0 0 48rpx 48rpx;
+}
+.ap-title { font-size: 42rpx; font-weight: 800; color: #fff; margin-top: 6rpx; text-shadow: 0 2rpx 8rpx rgba(150,70,0,.2); }
+.ap-sub { font-size: 23rpx; color: rgba(255,255,255,.9); margin-top: 6rpx; }
+
+.container { padding-top: 30rpx; }
+
+/* 审核中状态 */
+.status-card { text-align: center; padding: 40rpx 30rpx; }
+.st-icon { font-size: 76rpx; }
+.st-title { font-size: 34rpx; font-weight: 800; color: #52311B; margin-top: 10rpx; }
+.st-desc { font-size: 24rpx; color: #8C5A2B; margin: 14rpx 0 30rpx; line-height: 1.7; }
+.st-steps { display: flex; align-items: center; justify-content: center; margin-bottom: 34rpx; }
+.step { display: flex; flex-direction: column; align-items: center; width: 130rpx; }
+.step .dot {
+  width: 52rpx; height: 52rpx; border-radius: 50%;
+  background: #E9DFD2; color: #fff; font-size: 24rpx;
+  display: flex; align-items: center; justify-content: center; font-weight: 800;
+}
+.step.on .dot { background: linear-gradient(135deg, #FF9F4A, #F47521); }
+.step text { font-size: 20rpx; color: #C9A381; margin-top: 8rpx; }
+.step.on text { color: #B45A12; font-weight: 700; }
+.step-line { width: 90rpx; height: 4rpx; background: #E9DFD2; margin-top: -56rpx; }
+.step-line.on { background: linear-gradient(90deg, #FF9F4A, #F47521); }
+.ap-note { text-align: center; font-size: 22rpx; color: #B08968; margin-top: 24rpx; }
+
+/* 申请表 */
+.flow-row { display: flex; align-items: center; justify-content: center; margin-bottom: 26rpx; }
+.flow-step { display: flex; flex-direction: column; align-items: center; width: 140rpx; }
+.fs-num {
+  width: 54rpx; height: 54rpx; border-radius: 50%;
+  background: #fff; border: 2rpx solid #FFB36B; color: #D96A1E;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26rpx; font-weight: 800;
+}
+.flow-step text { font-size: 21rpx; color: #8C5A2B; margin-top: 8rpx; }
+.flow-line { width: 90rpx; height: 3rpx; background: #FFD9B8; margin-top: -50rpx; }
+
+.fc-title { font-size: 28rpx; font-weight: 800; color: #6E4224; padding: 24rpx 0 16rpx; }
+.fc-required { font-size: 20rpx; color: #C9A381; font-weight: 400; margin-left: 8rpx; }
+
+.cat-pick { display: flex; gap: 16rpx; padding-bottom: 24rpx; }
+.cat-item {
+  flex: 1; text-align: center;
+  background: #FFF9F1; border: 2rpx solid #FFE2C2; border-radius: 22rpx;
+  padding: 18rpx 10rpx;
+}
+.cat-item.active { border-color: #F47521; background: #FFF1DC; box-shadow: 0 6rpx 18rpx rgba(244,117,33,.15); }
+.cat-emoji { font-size: 40rpx; }
+.cat-name { font-size: 24rpx; font-weight: 700; color: #6E4224; margin-top: 4rpx; }
+.cat-desc { font-size: 18rpx; color: #B08968; margin-top: 2rpx; }
+
+.ph { color: #C9A381; }
+.upload-item { margin-bottom: 20rpx; }
+.upload-row { display: flex; gap: 20rpx; }
+.upload-item.half { flex: 1; }
+.up-label { font-size: 25rpx; font-weight: 700; color: #6E4224; }
+.req { color: #E4572E; margin-left: 4rpx; }
+.up-desc { font-size: 20rpx; color: #C9A381; margin: 4rpx 0 12rpx; }
+.up-box {
+  height: 260rpx; border-radius: 22rpx;
+  border: 2rpx dashed #FFC08A; background: #FFF9F1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.up-box.sm { height: 180rpx; }
+.up-box.filled { border-style: solid; }
+.up-img { width: 100%; height: 100%; }
+.up-plus { font-size: 60rpx; line-height: 1; }
+.up-tip { font-size: 22rpx; color: #B08968; margin-top: 10rpx; }
+
+.sec-tip {
+  background: #FFF1DC; border-radius: 18rpx;
+  padding: 16rpx 20rpx; font-size: 22rpx; color: #8C5A2B;
+  margin-bottom: 22rpx; line-height: 1.6;
+}
+.bottom-note { text-align: center; font-size: 20rpx; color: #C9A381; padding: 18rpx 0 30rpx; }

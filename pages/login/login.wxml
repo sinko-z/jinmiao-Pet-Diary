@@ -1,0 +1,36 @@
+<!--pages/login/login.wxml-->
+<view class="page login-page">
+  <view class="lg-hero">
+    <view class="lg-orb o1"></view>
+    <view class="lg-orb o2"></view>
+    <paw size="120" color="rgba(255,255,255,.85)" rotate="-12" />
+    <view class="lg-name">金喵宠物日记</view>
+    <view class="lg-slogan">记录每一只毛孩子的温暖日常</view>
+  </view>
+
+  <view class="container">
+    <view class="card lg-card">
+      <view class="lg-title">选择头像颜色</view>
+      <view class="lg-avatar-row">
+        <view class="avatar avatar-ph lg-avatar" style="background:{{avatarColor}}">{{userPreview}}</view>
+        <view class="color-list">
+          <view
+            class="color-dot {{avatarColor === item ? 'on' : ''}}"
+            wx:for="{{colors}}" wx:key="*this"
+            style="background:{{item}}"
+            data-color="{{item}}" bindtap="chooseColor"></view>
+        </view>
+      </view>
+      <view class="lg-tips">
+        <view class="tip-line">🐾 微信快捷登录，无需注册</view>
+        <view class="tip-line">🐾 登录后可参与记录、评分商家、发布动态</view>
+      </view>
+      <view class="agree-row" bindtap="toggleAgree">
+        <view class="agree-box {{agree ? 'on' : ''}}">{{agree ? '✓' : ''}}</view>
+        <view class="agree-text">我已阅读并同意 <text class="agree-link" catchtap="onProtocol">《用户协议》</text></view>
+      </view>
+      <button class="btn btn-primary btn-block" bindtap="onLogin" open-type="getUserInfo">微信一键登录</button>
+      <view class="lg-foot">点击登录即代表同意使用微信授权信息</view>
+    </view>
+  </view>
+</view>

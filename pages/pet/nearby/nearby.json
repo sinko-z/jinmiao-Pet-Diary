@@ -1,0 +1,4 @@
+{
+  "navigationBarTitleText": "附近的宠物",
+  "usingComponents": { "paw": "/components/paw/paw" }
+}

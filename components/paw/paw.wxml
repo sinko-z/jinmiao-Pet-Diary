@@ -1,0 +1,8 @@
+<!--components/paw/paw.wxml-->
+<view class="paw" style="width:{{size}}rpx;height:{{size}}rpx;transform:rotate({{rotate}}deg)">
+  <view class="paw-ball" style="background:{{color}}"></view>
+  <view class="paw-toe t1" style="background:{{color}}"></view>
+  <view class="paw-toe t2" style="background:{{color}}"></view>
+  <view class="paw-toe t3" style="background:{{color}}"></view>
+  <view class="paw-toe t4" style="background:{{color}}"></view>
+</view>

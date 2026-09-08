@@ -1,0 +1,5 @@
+{
+  "navigationBarTitleText": "宠物店 · 逛店",
+  "enablePullDownRefresh": true,
+  "usingComponents": { "paw": "/components/paw/paw" }
+}

@@ -1,0 +1,151 @@
+<!--pages/health/health.wxml-->
+<view class="page">
+  <view class="seg">
+    <view class="seg-item {{tab === 'vaccine' ? 'active' : ''}}" data-tab="vaccine" bindtap="switchTab">💉 疫苗</view>
+    <view class="seg-item {{tab === 'deworm' ? 'active' : ''}}" data-tab="deworm" bindtap="switchTab">🪱 驱虫</view>
+    <view class="seg-item {{tab === 'check' ? 'active' : ''}}" data-tab="check" bindtap="switchTab">🏥 体检</view>
+  </view>
+
+  <!-- 智能提醒 -->
+  <view class="remind-head" wx:if="{{reminders.length}}">
+    <view class="remind-title">🔔 智能提醒</view>
+    <view class="ahead-pick">
+      提前
+      <picker mode="selector" range="{{['3天','7天','14天','30天']}}" bindchange="onAheadChange">
+        <text class="ahead-val">{{aheadDays}}天 ▾</text>
+      </picker>
+    </view>
+  </view>
+  <view class="remind-list" wx:if="{{reminders.length}}">
+    <view class="remind-item" wx:for="{{reminders}}" wx:key="text">
+      <view class="remind-icon {{item.level}}">{{item.icon}}</view>
+      <view class="remind-text">{{item.text}}</view>
+    </view>
+  </view>
+
+  <view class="container">
+
+    <!-- 疫苗 -->
+    <block wx:if="{{tab === 'vaccine'}}">
+      <view class="card" wx:for="{{vaccineList}}" wx:key="id">
+        <view class="h-row">
+          <view class="h-icon v">💉</view>
+          <view class="h-body flex1">
+            <view class="h-name">{{item.name}}</view>
+            <view class="h-line">接种日期：{{item.date}}</view>
+            <view class="h-line">接种医院：{{item.hospital || '—'}}</view>
+          </view>
+          <view class="h-next">
+            <view class="h-next-label">下次接种</view>
+            <view class="h-next-date">{{item.nextDate}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="empty" wx:if="{{!vaccineList.length}}">
+        <view class="empty-icon">💉</view>
+        <view class="empty-title">暂无疫苗记录</view>
+        <view class="empty-desc">记录疫苗信息，到期自动提醒</view>
+      </view>
+      <view class="add-btn" data-type="vaccine" bindtap="openForm">＋ 添加疫苗接种记录</view>
+    </block>
+
+    <!-- 驱虫 -->
+    <block wx:if="{{tab === 'deworm'}}">
+      <view class="card" wx:for="{{dewormList}}" wx:key="id">
+        <view class="h-row">
+          <view class="h-icon d">🪱</view>
+          <view class="h-body flex1">
+            <view class="h-name">{{item.type}}</view>
+            <view class="h-line">驱虫日期：{{item.date}}</view>
+          </view>
+          <view class="h-next">
+            <view class="h-next-label">下次驱虫</view>
+            <view class="h-next-date">{{item.nextDate}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="empty" wx:if="{{!dewormList.length}}">
+        <view class="empty-icon">🪱</view>
+        <view class="empty-title">暂无驱虫记录</view>
+        <view class="empty-desc">体内外定期驱虫，守护毛孩子健康</view>
+      </view>
+      <view class="add-btn" data-type="deworm" bindtap="openForm">＋ 添加驱虫记录</view>
+    </block>
+
+    <!-- 体检 -->
+    <block wx:if="{{tab === 'check'}}">
+      <view class="card" wx:for="{{checkList}}" wx:key="id">
+        <view class="h-top">
+          <view class="h-name" style="font-size:30rpx">🏥 {{item.date}} 体检</view>
+          <view class="tag tag-green">结果：{{item.resultHead}}</view>
+        </view>
+        <view class="h-line" style="margin-top:10rpx">体检机构：{{item.org}}</view>
+        <view class="h-result">结果：{{item.result}}</view>
+        <view class="h-note" wx:if="{{item.note}}">👨‍⚕️ 医生备注：{{item.note}}</view>
+      </view>
+      <view class="empty" wx:if="{{!checkList.length}}">
+        <view class="empty-icon">🏥</view>
+        <view class="empty-title">暂无体检记录</view>
+        <view class="empty-desc">定期体检，早发现早治疗</view>
+      </view>
+      <view class="add-btn" data-type="check" bindtap="openForm">＋ 添加体检记录</view>
+    </block>
+  </view>
+
+  <!-- 记录弹层 -->
+  <view class="mask" wx:if="{{showForm}}" bindtap="closeForm">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title">
+        {{formType === 'vaccine' ? '添加疫苗记录' : formType === 'deworm' ? '添加驱虫记录' : '添加体检记录'}}
+      </view>
+      <view class="form-card" style="margin:0">
+        <block wx:if="{{formType === 'vaccine'}}">
+          <view class="form-item"><view class="form-label">疫苗名称</view>
+            <input class="form-input" placeholder="如：猫三联" placeholder-class="ph" value="{{form.name}}" data-key="name" bindinput="onFormInput" /></view>
+        </block>
+        <block wx:if="{{formType === 'deworm'}}">
+          <view class="form-item"><view class="form-label">驱虫类型</view>
+            <view class="form-value gender-pick">
+              <view class="gender-chip {{form.type === '体内驱虫' ? 'active' : ''}}" data-key="type" data-value="体内驱虫" bindtap="onFormInput">体内</view>
+              <view class="gender-chip {{form.type === '体外驱虫' ? 'active' : ''}}" data-key="type" data-value="体外驱虫" bindtap="onFormInput">体外</view>
+              <view class="gender-chip {{form.type === '体内外同驱' ? 'active' : ''}}" data-key="type" data-value="体内外同驱" bindtap="onFormInput">体内外</view>
+            </view>
+          </view>
+        </block>
+        <view class="form-item">
+          <view class="form-label">日期</view>
+          <picker mode="date" value="{{form.date}}" data-key="date" bindchange="onFormDate">
+            <view class="form-value picker-value {{form.date ? '' : 'ph'}}">{{form.date || '选择日期'}}<text class="form-arrow">▾</text></view>
+          </picker>
+        </view>
+        <view class="form-item" wx:if="{{formType !== 'check'}}">
+          <view class="form-label">{{formType === 'vaccine' ? '下次接种' : '下次驱虫'}}</view>
+          <picker mode="date" value="{{form.nextDate}}" data-key="nextDate" bindchange="onFormDate">
+            <view class="form-value picker-value {{form.nextDate ? '' : 'ph'}}">{{form.nextDate || '选择日期'}}<text class="form-arrow">▾</text></view>
+          </picker>
+        </view>
+        <view class="form-item" wx:if="{{formType === 'vaccine'}}">
+          <view class="form-label">接种医院</view>
+          <input class="form-input" placeholder="医院名称" placeholder-class="ph" value="{{form.hospital}}" data-key="hospital" bindinput="onFormInput" />
+        </view>
+        <view class="form-item" wx:if="{{formType === 'check'}}">
+          <view class="form-label">体检机构</view>
+          <input class="form-input" placeholder="机构名称" placeholder-class="ph" value="{{form.org}}" data-key="org" bindinput="onFormInput" />
+        </view>
+        <view class="form-item" wx:if="{{formType === 'check'}}">
+          <view class="form-label">体检结果</view>
+          <input class="form-input" placeholder="如：各项指标正常" placeholder-class="ph" value="{{form.result}}" data-key="result" bindinput="onFormInput" />
+        </view>
+        <view class="form-item" style="align-items:flex-start;padding:20rpx 0" wx:if="{{formType === 'check'}}">
+          <view class="form-label" style="margin-top:6rpx">医生备注</view>
+          <textarea class="form-textarea" placeholder="医生建议…" placeholder-class="ph" value="{{form.note}}" data-key="note" bindinput="onFormInput" />
+        </view>
+      </view>
+      <view class="sheet-actions">
+        <button class="btn btn-ghost flex1" bindtap="closeForm">取消</button>
+        <button class="btn btn-primary flex1" style="margin-left:20rpx" bindtap="saveForm">保存</button>
+      </view>
+    </view>
+  </view>
+</view>
+

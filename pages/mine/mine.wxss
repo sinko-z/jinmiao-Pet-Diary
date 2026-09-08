@@ -1,0 +1,137 @@
+/* pages/mine/mine.wxss */
+.me-head {
+  position: relative;
+  background: linear-gradient(160deg, #FFD9A0, #FF9F4A);
+  padding: 44rpx 34rpx 0;
+  border-radius: 0 0 52rpx 52rpx;
+  overflow: hidden;
+}
+.me-orb { position: absolute; border-radius: 50%; background: rgba(255,255,255,.18); }
+.o1 { width: 300rpx; height: 300rpx; top: -140rpx; right: -80rpx; }
+.o2 { width: 180rpx; height: 180rpx; bottom: -80rpx; left: -40rpx; background: rgba(255,255,255,.12); }
+.me-top { display: flex; align-items: center; position: relative; z-index: 1; }
+.me-avatar { box-shadow: 0 8rpx 20rpx rgba(120,60,10,.2); border: 4rpx solid rgba(255,255,255,.7); }
+.me-info { margin-left: 24rpx; }
+.me-name { font-size: 38rpx; font-weight: 800; color: #5E3716; }
+.me-v { font-size: 26rpx; }
+.me-bio { font-size: 23rpx; color: #7A4A1E; margin-top: 4rpx; }
+.me-edit {
+  font-size: 22rpx; color: #6E4224; background: rgba(255,255,255,.7);
+  padding: 10rpx 24rpx; border-radius: 30rpx; flex-shrink: 0;
+}
+.me-stats {
+  position: relative; z-index: 1;
+  display: flex; align-items: center;
+  background: rgba(255,255,255,.55);
+  border-radius: 28rpx 28rpx 0 0;
+  margin-top: 30rpx; padding: 26rpx 0;
+  backdrop-filter: blur(10rpx);
+}
+.me-stat { flex: 1; display: flex; flex-direction: column; align-items: center; }
+.me-num { font-size: 38rpx; font-weight: 800; color: #6E4224; }
+.me-label { font-size: 21rpx; color: #8C5A2B; margin-top: 2rpx; }
+.me-div { width: 1rpx; height: 50rpx; background: rgba(110,66,36,.16); }
+
+.container { padding-top: 30rpx; }
+
+.mini-pet { display: flex; align-items: center; padding: 16rpx 0; border-bottom: 1rpx solid #FFF5EA; }
+.mini-pet:last-child { border-bottom: none; }
+.mini-cover {
+  width: 84rpx; height: 84rpx; border-radius: 24rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 44rpx; margin-right: 20rpx; flex-shrink: 0;
+}
+.mini-name { font-size: 29rpx; font-weight: 800; color: #52311B; }
+.mini-desc { font-size: 22rpx; color: #B08968; margin-top: 2rpx; }
+.cell-arrow { font-size: 40rpx; color: #E4CDB4; margin-left: 14rpx; }
+
+.cell { display: flex; align-items: center; padding: 22rpx 0; border-bottom: 1rpx solid #FFF5EA; }
+.cell:last-child { border-bottom: none; }
+.cell-icon {
+  width: 68rpx; height: 68rpx; border-radius: 20rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32rpx; margin-right: 20rpx; flex-shrink: 0;
+}
+.cell-label { font-size: 28rpx; color: #6E4224; font-weight: 600; }
+
+.foot-logo { text-align: center; padding: 40rpx 0 20rpx; }
+.foot-emoji { font-size: 52rpx; }
+.foot-name { font-size: 24rpx; color: #B08968; font-weight: 700; margin-top: 8rpx; }
+.foot-slogan { font-size: 20rpx; color: #C9A381; margin-top: 4rpx; }
+/* v1.1 新增：登录 / 邀请 / 商家入口 */
+.me-edit.strong { background: #fff; color: #D96A1E; font-weight: 800; }
+.me-orb.o3 { width: 120rpx; height: 120rpx; bottom: 10rpx; right: 200rpx; background: none; }
+.paw-deco {
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.35) 22rpx, transparent 23rpx),
+    radial-gradient(circle at 12% 60%, rgba(255,255,255,.25) 16rpx, transparent 17rpx),
+    radial-gradient(circle at 52% 8%, rgba(255,255,255,.3) 16rpx, transparent 17rpx),
+    radial-gradient(circle at 66% 50%, rgba(255,255,255,.25) 15rpx, transparent 16rpx);
+}
+
+.login-bar {
+  display: flex; align-items: center;
+  background: linear-gradient(135deg, #FFF1DC, #FFE2BE);
+  border: 1rpx solid #FFD9A0; border-radius: 26rpx;
+  padding: 22rpx 24rpx; margin-bottom: 20rpx;
+}
+.lb-icon { font-size: 48rpx; margin-right: 18rpx; }
+.lb-title { font-size: 29rpx; font-weight: 800; color: #B45A12; }
+.lb-desc { font-size: 21rpx; color: #A5794E; margin-top: 2rpx; }
+.lb-btn {
+  background: linear-gradient(135deg, #FF9F4A, #F47521); color: #fff;
+  font-size: 24rpx; font-weight: 800; padding: 12rpx 26rpx; border-radius: 32rpx; flex-shrink: 0;
+}
+
+.invite-banner {
+  display: flex; align-items: center;
+  background: linear-gradient(135deg, #FFE3DA, #FFC9B4);
+  border-radius: 28rpx; padding: 26rpx 24rpx; margin-bottom: 20rpx;
+  box-shadow: 0 8rpx 22rpx rgba(228,87,46,.18);
+}
+.ib-paw { font-size: 54rpx; margin-right: 18rpx; }
+.ib-title { font-size: 29rpx; font-weight: 800; color: #8C3B1F; }
+.ib-desc { font-size: 21rpx; color: #A65A38; margin-top: 2rpx; }
+.ib-btn {
+  background: #fff; color: #E4572E; font-size: 24rpx; font-weight: 800;
+  padding: 12rpx 24rpx; border-radius: 32rpx; flex-shrink: 0;
+}
+
+.merchant-bar {
+  display: flex; align-items: center;
+  background: #fff; border-radius: 26rpx; padding: 22rpx 24rpx;
+  margin-bottom: 20rpx; box-shadow: 0 5rpx 18rpx rgba(180,110,40,.07);
+  border: 1rpx solid rgba(255,214,170,.4);
+}
+.mb-logo {
+  width: 80rpx; height: 80rpx; border-radius: 22rpx;
+  background: #FFF3D6; display: flex; align-items: center; justify-content: center;
+  font-size: 40rpx; margin-right: 18rpx;
+}
+.mb-title { font-size: 28rpx; font-weight: 800; color: #6E4224; }
+.mb-desc { font-size: 21rpx; color: #B08968; margin-top: 2rpx; }
+
+.logout-btn {
+  text-align: center; color: #E4572E; font-size: 27rpx;
+  background: #fff; border-radius: 26rpx; padding: 24rpx;
+  margin-top: 8rpx; box-shadow: 0 5rpx 18rpx rgba(180,110,40,.06);
+}
+.paw-dots { display: flex; justify-content: center; align-items: flex-end; gap: 18rpx; margin: 6rpx 0 0; }
+/* 账号信息卡 */
+.account-card {
+  background: linear-gradient(135deg, #FFF7EC, #FFEFDA);
+  border: 1rpx solid #FFE0BC; border-radius: 26rpx;
+  padding: 24rpx 26rpx; margin-bottom: 20rpx;
+}
+.ac-row { display: flex; align-items: flex-start; padding: 8rpx 0; }
+.ac-label { width: 170rpx; font-size: 24rpx; color: #B08968; flex-shrink: 0; }
+.ac-value { flex: 1; font-size: 25rpx; color: #6E4224; font-weight: 600; word-break: break-all; }
+.ac-sub { font-size: 19rpx; color: #C9A381; font-weight: 400; margin-left: 8rpx; }
+.ac-note { font-size: 22rpx; color: #8C5A2B; font-weight: 400; line-height: 1.6; }
+.ac-actions { display: flex; gap: 16rpx; margin-top: 14rpx; }
+.ac-btn {
+  flex: 1; text-align: center;
+  background: linear-gradient(135deg, #FF9F4A, #F47521); color: #fff;
+  font-size: 25rpx; font-weight: 700; padding: 16rpx 0; border-radius: 36rpx;
+}
+.ac-btn.ghost { background: #fff; color: #D96A1E; border: 2rpx solid #FFB36B; }

@@ -1,0 +1,222 @@
+<!--pages/pet/detail/detail.wxml-->
+<view class="page detail-page" wx:if="{{pet}}">
+
+  <!-- 宠物头部 -->
+  <view class="pet-head" style="background:{{pet.coverGradient}}">
+    <view class="head-orb r1"></view>
+    <view class="head-orb r2"></view>
+    <view class="head-main">
+      <view class="head-avatar">{{pet.emoji}}</view>
+      <view class="head-info">
+        <view class="head-name-row">
+          <text class="head-name">{{pet.name}}</text>
+          <text class="head-gender">{{pet.gender === '弟弟' ? '♂' : '♀'}}</text>
+          <text wx:if="{{pet.lost}}" class="tag tag-red">走失中</text>
+          <text wx:if="{{pet.type === 'stray'}}" class="tag tag-red">待领养</text>
+        </view>
+        <view class="head-meta">{{pet.species}} · {{pet.ageText}} · {{pet.birthday}} 出生</view>
+        <view class="head-tags">
+          <text class="tag" wx:for="{{pet.tags}}" wx:for-item="tg" wx:key="*this" style="background:rgba(255,255,255,.8)">{{tg}}</text>
+        </view>
+      </view>
+      <view class="head-edit" bindtap="goEdit">✎</view>
+    </view>
+    <view class="head-stats">
+      <view class="stat"><view class="stat-num">{{pet.weight}}</view><view class="stat-label">体重 kg</view></view>
+      <view class="stat-divider"></view>
+      <view class="stat"><view class="stat-num">{{pet.members.length}}</view><view class="stat-label">协作者</view></view>
+      <view class="stat-divider"></view>
+      <view class="stat"><view class="stat-num">7</view><view class="stat-label">成长照片</view></view>
+    </view>
+  </view>
+
+  <!-- 悬浮返回 -->
+  <view class="flt-back" bindtap="goBack">‹</view>
+
+  <!-- 被邀请加入宠物家庭横幅 -->
+  <view class="join-bar" wx:if="{{joinVisible}}" bindtap="joinFamily">
+    <view class="jb-emoji">💌</view>
+    <view class="jb-body flex1">
+      <view class="jb-title">{{inviteFrom}}</view>
+      <view class="jb-sub">点击加入「{{pet.name}}」的宠物家庭，与家人共同记录</view>
+    </view>
+    <view class="jb-go">加入 ›</view>
+  </view>
+
+  <view class="container">
+
+    <!-- 快捷操作 -->
+    <view class="quick-grid">
+      <view class="q-item" data-url="/pages/growth/growth" bindtap="go">
+        <view class="q-icon" style="background:#FFF3D6">📸</view><text>成长记录</text>
+      </view>
+      <view class="q-item" data-url="/pages/track/track" bindtap="go">
+        <view class="q-icon" style="background:#EAF2DF">📍</view><text>轨迹打卡</text>
+      </view>
+      <view class="q-item" data-url="/pages/feed/feed" bindtap="go">
+        <view class="q-icon" style="background:#FFE9D2">🍚</view><text>投喂管理</text>
+      </view>
+      <view class="q-item" data-url="/pages/health/health" bindtap="go">
+        <view class="q-icon" style="background:#FFE3DA">💉</view><text>健康记录</text>
+      </view>
+      <view class="q-item" data-url="/pages/weight/weight" bindtap="go">
+        <view class="q-icon" style="background:#FCF0D8">⚖️</view><text>体重曲线</text>
+      </view>
+      <view class="q-item" data-url="/pages/community/community" bindtap="go">
+        <view class="q-icon" style="background:#FFEDE0">💬</view><text>发布动态</text>
+      </view>
+      <view class="q-item" bindtap="goLost">
+        <view class="q-icon" style="background:#F5E1D6">🐾</view><text>发布走失</text>
+      </view>
+      <view class="q-item" bindtap="invite">
+        <view class="q-icon" style="background:#FFEFDE">👥</view><text>邀请协作</text>
+      </view>
+    </view>
+
+    <!-- 智能健康提醒（数据驱动，临近到期自动出现） -->
+    <view class="warn-card" wx:if="{{healthWarn}}">
+      <view class="warn-icon">📢</view>
+      <view class="warn-body">
+        <view class="warn-title">健康提醒</view>
+        <view class="warn-text">{{healthWarn.text}}</view>
+      </view>
+      <view class="warn-btn" data-url="{{healthWarn.url}}" bindtap="go">去处理</view>
+    </view>
+
+    <!-- 基本信息 -->
+    <view class="card">
+      <view class="section-head" style="margin-top:0">
+        <view class="section-title">基本信息</view>
+        <view class="link-more" bindtap="goEdit">编辑 ✎</view>
+      </view>
+      <view class="info-grid">
+        <view class="info-item"><text class="info-label">昵称</text><text class="info-value">{{pet.name}}</text></view>
+        <view class="info-item"><text class="info-label">性别</text><text class="info-value">{{pet.gender}}</text></view>
+        <view class="info-item"><text class="info-label">品种</text><text class="info-value">{{pet.species}}</text></view>
+        <view class="info-item"><text class="info-label">生日</text><text class="info-value">{{pet.birthday}}</text></view>
+        <view class="info-item"><text class="info-label">体重</text><text class="info-value">{{pet.weight}} kg</text></view>
+        <view class="info-item"><text class="info-label">绝育</text><text class="info-value">{{pet.sterilized ? '已绝育' : '未绝育'}}</text></view>
+        <view class="info-item"><text class="info-label">疫苗</text><text class="info-value">{{pet.vaccinated ? '已接种' : '未接种'}}</text></view>
+        <view class="info-item"><text class="info-label">分类</text><text class="info-value">{{pet.typeText}}</text></view>
+      </view>
+      <view class="divider"></view>
+      <view class="bio-row"><text class="info-label">小简介</text><text class="bio-text">{{pet.intro}}</text></view>
+      <view class="bio-row"><text class="info-label">爱好</text><text class="bio-text">{{pet.hobbies}}</text></view>
+      <view class="bio-row"><text class="info-label">爱吃</text><text class="bio-text">{{pet.favoriteFood}}</text></view>
+    </view>
+
+    <!-- 好朋友 -->
+    <view class="card">
+      <view class="section-head" style="margin-top:0">
+        <view class="section-title">🐾 {{pet.name}} 的好朋友</view>
+        <view class="link-more" bindtap="addFriend">＋ 添加</view>
+      </view>
+      <view class="friend-row" wx:if="{{friends.length}}">
+        <view class="friend-chip" wx:for="{{friends}}" wx:key="id">
+          <view class="f-avatar" style="background:{{item.color}}">{{item.emoji}}</view>
+          <view class="f-name">{{item.name}}</view>
+        </view>
+      </view>
+      <view class="friend-empty" wx:else bindtap="addFriend">
+        <paw size="44" color="#FFC08A" />
+        <text>还没有好朋友，去认识附近的毛孩子吧</text>
+      </view>
+    </view>
+
+    <!-- 忌口与注意事项 -->
+    <view class="card note-card">
+      <view class="note-block" wx:if="{{pet.noFoods}}">
+        <view class="note-emoji">🚫</view>
+        <view class="note-body">
+          <view class="note-title">不爱吃 / 忌口</view>
+          <view class="note-text">{{pet.noFoods}}</view>
+        </view>
+      </view>
+      <view class="note-block" wx:if="{{pet.notes}}">
+        <view class="note-emoji">📌</view>
+        <view class="note-body">
+          <view class="note-title">注意事项</view>
+          <view class="note-text">{{pet.notes}}</view>
+        </view>
+      </view>
+      <view class="note-block" wx:if="{{!pet.noFoods && !pet.notes}}">
+        <view class="note-emoji">✏️</view>
+        <view class="note-body">
+          <view class="note-text" style="color:#C9A381">去「编辑档案」补充忌口食物与注意事项，方便家人照护</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 协作者 -->
+    <view class="card">
+      <view class="section-head" style="margin-top:0">
+        <view class="section-title">共同记录人 🐾</view>
+        <view class="link-more" bindtap="invite">邀请 ＋</view>
+      </view>
+      <view class="member-row" wx:for="{{pet.members}}" wx:key="id">
+        <view class="avatar avatar-ph" style="background:{{item.color}};width:64rpx;height:64rpx;font-size:26rpx">{{item.firstChar}}</view>
+        <view class="member-name flex1">{{item.name}}</view>
+        <view class="tag {{item.role === 'admin' ? 'tag-orange' : ''}}">{{item.role === 'admin' ? '管理员' : '协作者'}}</view>
+      </view>
+      <view class="privacy-tip">🔒 手机号等私密信息仅协作者可见，公开浏览不展示</view>
+    </view>
+
+    <!-- 铲屎官的成长故事 -->
+    <view class="story-card">
+      <view class="story-head">
+        <view class="story-title"><paw size="36" color="#F47521" rotate="-15" /> 铲屎官手记 · 我和 {{pet.name}} 的故事</view>
+        <view class="story-edit" bindtap="editStory">✎ 书写</view>
+      </view>
+      <view class="story-text" wx:if="{{pet.story}}">{{pet.story}}</view>
+      <view class="story-empty" wx:else bindtap="editStory">还没有故事，写下你们的第一个回忆吧 📖</view>
+      <view class="story-sign">—— by {{pet.members[0].name}}</view>
+    </view>
+
+    <!-- 走失入口 -->
+    <view class="lost-banner" bindtap="goLost" hover-class="hover-dim">
+      <view class="lost-icon">🐾</view>
+      <view class="lost-body">
+        <view class="lost-title">宠物走失了？</view>
+        <view class="lost-desc">一键发布走失信息，推送给附近用户帮忙留意</view>
+      </view>
+      <view class="lost-arrow">›</view>
+    </view>
+
+    <view class="bottom-tip">🐾 公开可见 · 参与记录即可共同维护 · 🐾</view>
+  </view>
+
+  <!-- 邀请加入宠物家庭（链接形式）弹层 -->
+  <view class="mask" wx:if="{{showInvite}}" bindtap="closeInvite">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title">🐾 邀请加入宠物家庭</view>
+      <view class="inv-hint">把邀请链接发给家人朋友，对方打开即可加入共同记录（{{memberCountText}}）</view>
+      <view class="inv-link-box">
+        <view class="inv-link-text">{{inviteLink}}</view>
+        <view class="inv-copy" bindtap="copyInvite">复制</view>
+      </view>
+      <view class="inv-actions">
+        <button class="btn btn-primary flex1" bindtap="shareInvite">分享给微信好友</button>
+      </view>
+      <view class="inv-tip">💡 对方点开链接后自动进入「{{pet.name}}」档案 → 点击“加入宠物家庭”即可成为协作者</view>
+    </view>
+  </view>
+
+  <!-- 添加好朋友弹层 -->
+  <view class="mask" wx:if="{{showFriend}}" bindtap="closeFriend">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title">为 {{pet.name}} 添加好朋友</view>
+      <view class="fr-tip">可以填写宠物昵称，或从「附近的宠物」选择并发送交友申请</view>
+      <view class="form-card" style="margin:0">
+        <view class="form-item">
+          <view class="form-label">好友昵称</view>
+          <input class="form-input" placeholder="如：球球" placeholder-class="ph"
+            value="{{friendName}}" bindinput="onFriendName" focus />
+        </view>
+      </view>
+      <view class="sheet-actions">
+        <button class="btn btn-ghost flex1" bindtap="pickNearbyFriend">附近的宠物</button>
+        <button class="btn btn-primary flex1" style="margin-left:20rpx" bindtap="saveFriend">添加好友</button>
+      </view>
+    </view>
+  </view>
+</view>

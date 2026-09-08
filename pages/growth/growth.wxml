@@ -1,0 +1,52 @@
+<!--pages/growth/growth.wxml-->
+<view class="page">
+  <view class="growth-hero">
+    <view class="gh-title">📸 {{petName}} 的成长相册</view>
+    <view class="gh-sub">共 {{list.length}} 张 · 按拍摄时间排列</view>
+  </view>
+
+  <view class="container">
+    <view class="timeline">
+      <view class="tl-item" wx:for="{{list}}" wx:key="id">
+        <view class="tl-dot"></view>
+        <view class="card tl-card">
+          <view class="tl-head">
+            <view class="tl-date">{{item.dateText}}</view>
+            <view class="tl-time">{{item.timeText}}</view>
+          </view>
+          <view class="tl-photo" wx:if="{{item.photo}}" data-url="{{item.photo}}" bindtap="preview">📷 照片</view>
+          <view class="tl-note" wx:else>
+            <view class="note-ph">{{item.emoji || '🐾'}}</view>
+            {{item.note}}
+          </view>
+          <view class="tl-meta" wx:if="{{item.location}}">📍 {{item.location}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty" wx:if="{{!list.length}}">
+      <view class="empty-icon">📷</view>
+      <view class="empty-title">还没有成长记录</view>
+      <view class="empty-desc">用照片留住它的每个第一次</view>
+    </view>
+  </view>
+
+  <view class="fab" bindtap="openUpload">＋</view>
+
+  <!-- 上传面板 -->
+  <view class="mask" wx:if="{{showUpload}}" bindtap="closeUpload">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title">记录成长瞬间</view>
+      <view class="upload-box" bindtap="submitUpload">
+        <view class="upload-plus">＋</view>
+        <view class="upload-tip">点击选择照片（演示：直接记录）</view>
+      </view>
+      <textarea class="note-area" placeholder="写点备注吧，如：第一次洗澡、满月啦…" placeholder-class="ph"
+        value="{{uploadNote}}" bindinput="onNote" maxlength="100" />
+      <view class="sheet-actions">
+        <button class="btn btn-ghost flex1" bindtap="closeUpload">取消</button>
+        <button class="btn btn-primary flex1" style="margin-left:20rpx" bindtap="submitUpload">发布记录</button>
+      </view>
+    </view>
+  </view>
+</view>

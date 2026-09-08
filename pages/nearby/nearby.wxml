@@ -1,0 +1,55 @@
+<!--pages/nearby/nearby.wxml-->
+<view class="page">
+  <view class="nb-head">
+    <view class="nb-top">
+      <view>
+        <view class="nb-title">📍 附近宠物服务</view>
+        <view class="nb-sub">{{locating ? '正在定位…' : '为你找到 ' + list.length + ' 家附近服务'}}</view>
+      </view>
+      <view class="nb-locate" bindtap="locate">重新定位</view>
+    </view>
+    <view class="nb-types">
+      <view class="nb-type {{type === item.key ? 'active' : ''}}" wx:for="{{types}}" wx:key="key"
+        data-key="{{item.key}}" bindtap="onType">{{item.label}}</view>
+    </view>
+    <view class="nb-sorts">
+      <view class="nb-sort {{sort === 'distance' ? 'on' : ''}}" data-sort="distance" bindtap="onSort">按距离 ▾</view>
+      <view class="nb-sort {{sort === 'rating' ? 'on' : ''}}" data-sort="rating" bindtap="onSort">好评优先 ▾</view>
+    </view>
+  </view>
+
+  <!-- 附近宠物 + 宠物店入口 -->
+  <view class="dual-entry">
+    <view class="entry-card pets" bindtap="goNearbyPets">
+      <view class="en-emoji">🐾</view>
+      <view class="en-title">附近的宠物</view>
+      <view class="en-desc">看看周围的小可爱</view>
+    </view>
+    <view class="entry-card shops" bindtap="goShopTab">
+      <view class="en-emoji">🏪</view>
+      <view class="en-title">宠物好店</view>
+      <view class="en-desc">评分认证 · 安心服务</view>
+    </view>
+  </view>
+
+  <view class="container">
+    <view class="svc card" wx:for="{{list}}" wx:key="id">
+      <view class="svc-icon" style="background:{{item.color}}1A">{{item.type === '宠物医院' ? '🏥' : item.type === '宠物店' ? '🛍️' : '🌳'}}</view>
+      <view class="svc-body flex1">
+        <view class="svc-name">{{item.name}}</view>
+        <view class="svc-meta">
+          <text class="svc-dist">📍 {{item.distance}}</text>
+          <text class="svc-rating">★ {{item.rating}}</text>
+        </view>
+        <view class="svc-hours">🕐 {{item.hours}}</view>
+        <view class="svc-tags">
+          <text class="tag" wx:for="{{item.tags}}" wx:for-item="t" wx:key="*this">{{t}}</text>
+        </view>
+      </view>
+      <view class="svc-actions">
+        <view class="svc-btn" data-phone="{{item.phone}}" bindtap="call">📞</view>
+        <view class="svc-btn" data-lat="{{item.lat}}" data-lng="{{item.lng}}" data-name="{{item.name}}" bindtap="navigate">🧭</view>
+      </view>
+    </view>
+  </view>
+</view>

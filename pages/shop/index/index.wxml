@@ -1,0 +1,73 @@
+<!--pages/shop/index/index.wxml-->
+<view class="page">
+  <view class="shop-hero">
+    <view class="sh-orb o1"></view>
+    <view class="sh-orb o2"></view>
+    <view class="sh-top">
+      <view>
+        <view class="sh-title">🏪 附近宠物好店</view>
+        <view class="sh-sub">{{locating ? '正在定位附近店铺…' : '为你甄选 ' + shops.length + ' 家靠谱店铺'}}</view>
+      </view>
+      <view class="sh-locate" bindtap="locate">📍 重定位</view>
+    </view>
+    <view class="sh-cats">
+      <view class="sh-cat {{cat === item.key ? 'active' : ''}}" wx:for="{{cats}}" wx:key="key"
+        data-key="{{item.key}}" bindtap="onCat">{{item.label}}</view>
+    </view>
+    <view class="sh-sort-row">
+      <view class="sh-sort {{sort === 'distance' ? 'on' : ''}}" data-sort="distance" bindtap="onSort">距离优先</view>
+      <view class="sh-sort {{sort === 'rating' ? 'on' : ''}}" data-sort="rating" bindtap="onSort">好评优先</view>
+      <view class="sh-cert">✓ 已认证商家</view>
+    </view>
+  </view>
+
+  <view class="container">
+    <!-- 我的店铺（入驻通过后展示） -->
+    <view class="my-shop" wx:if="{{myShop}}" bindtap="goMyShop">
+      <view class="ms-logo">{{myShop.logo}}</view>
+      <view class="ms-body flex1">
+        <view class="ms-name">{{myShop.name}} <text class="tag tag-orange">我的店铺</text></view>
+        <view class="ms-desc">点击进入商家管理 · 查看评价与营业数据</view>
+      </view>
+      <view class="ms-arrow">›</view>
+    </view>
+
+    <!-- 入驻引导横幅 -->
+    <view class="join-banner" bindtap="goApply">
+      <view class="jb-paw"><paw size="72" color="#FFFFFF" /></view>
+      <view class="jb-body flex1">
+        <view class="jb-title">🐾 我是宠物商家，我要入驻</view>
+        <view class="jb-desc">上传营业执照与身份信息，审核通过后即可上线接单</view>
+      </view>
+      <view class="jb-btn">立即入驻</view>
+    </view>
+
+    <!-- 店铺卡片 -->
+    <view class="shop-card" wx:for="{{shops}}" wx:key="id" data-id="{{item.id}}" bindtap="goShop">
+      <view class="sc-logo" style="background:{{item.color}}1A">{{item.logo}}</view>
+      <view class="sc-body flex1">
+        <view class="sc-name-row">
+          <text class="sc-name">{{item.name}}</text>
+          <text class="sc-badge" wx:if="{{item.status === 'verified'}}">认证</text>
+        </view>
+        <view class="sc-meta">
+          <text class="sc-dist">📍 {{item.distance}}</text>
+          <text class="sc-hour">🕐 {{item.hours}}</text>
+        </view>
+        <view class="sc-rating">
+          <text class="stars">
+            <text wx:for="{{item.ratingStars.full}}" wx:key="*this">★</text>
+            <text wx:if="{{item.ratingStars.half}}" class="half">★</text>
+            <text wx:for="{{item.ratingStars.empty}}" wx:key="*this" class="gray">★</text>
+          </text>
+          <text class="sc-score">{{item.rating}}</text>
+          <text class="sc-count">{{item.scoreCount}} 条评价</text>
+        </view>
+        <view class="sc-tags">
+          <text class="tag" wx:for="{{item.tags}}" wx:for-item="tg" wx:key="*this">{{tg}}</text>
+        </view>
+      </view>
+      <view class="sc-arrow">›</view>
+    </view>
+  </view>
+</view>

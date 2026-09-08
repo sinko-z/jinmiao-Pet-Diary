@@ -1,0 +1,112 @@
+<!--pages/index/index.wxml-->
+<view class="page">
+  <!-- 顶部暖色头图 -->
+  <view class="hero">
+    <view class="hero-orb orb1"></view>
+    <view class="hero-orb orb2"></view>
+    <paw size="150" color="rgba(255,255,255,.22)" rotate="20" class="hero-paw" />
+    <view class="hero-top">
+      <view>
+        <view class="hero-greet">🐾 你好呀，铲屎官 🐾</view>
+        <view class="hero-title">今天也要好好爱它们</view>
+      </view>
+      <view class="hero-user avatar avatar-ph">喵</view>
+    </view>
+
+    <!-- 搜索框 -->
+    <view class="search-bar {{showSearch ? 'expand' : ''}}" bindtap="onToggleSearch">
+      <view class="search-icon">🔍</view>
+      <input wx:if="{{showSearch}}"
+        class="search-input" placeholder="搜索宠物昵称 / 品种 / 标签"
+        placeholder-class="search-ph" value="{{keyword}}"
+        focus bindinput="onSearchInput" confirm-type="search" />
+      <text wx:else class="search-ph">搜索宠物昵称 / 品种 / 标签</text>
+      <view wx:if="{{keyword}}" class="search-clear" catchtap="onClearSearch">✕</view>
+    </view>
+
+    <!-- 快捷入口 -->
+    <view class="quick-row">
+      <view class="quick-item" bindtap="goNearby">
+        <view class="quick-icon" style="background:#FFE9D2">📍</view>
+        <text>附近服务</text>
+      </view>
+      <view class="quick-item" bindtap="goNearbyPets">
+        <view class="quick-icon" style="background:#EAF2DF">🐾</view>
+        <text>附近宠物</text>
+      </view>
+      <view class="quick-item" bindtap="goLostPublish">
+        <view class="quick-icon" style="background:#FFE3DA">🐾</view>
+        <text>发布走失</text>
+      </view>
+      <view class="quick-item" bindtap="goAdd">
+        <view class="quick-icon" style="background:#FFF3D6">➕</view>
+        <text>添加宠物</text>
+      </view>
+
+    </view>
+  </view>
+
+  <!-- 宠物列表 -->
+  <view class="container">
+    <view class="section-head">
+      <view class="section-title">我的毛孩子 🐾</view>
+      <view class="count-desc">共 {{pets.length}} 只</view>
+    </view>
+
+    <view class="filter-row">
+      <view
+        wx:for="{{filterTabs}}"
+        wx:key="key"
+        class="filter-chip {{filter === item.key ? 'active' : ''}}"
+        data-key="{{item.key}}"
+        bindtap="onFilterTap">{{item.label}}</view>
+    </view>
+
+    <!-- 宠物卡片 -->
+    <view class="pet-card" wx:for="{{pets}}" wx:key="id" data-id="{{item.id}}" bindtap="goDetail" hover-class="hover-dim">
+      <view class="pet-cover" style="background:{{item.coverGradient}}">
+        <view class="pet-emoji">{{item.emoji}}</view>
+        <view class="pet-type {{item.type === 'stray' ? 'tag-red' : 'tag-orange'}}">{{item.typeText}}</view>
+      </view>
+      <view class="pet-info">
+        <view class="pet-name-row">
+          <text class="pet-name">{{item.name}}</text>
+          <text class="pet-gender">{{item.gender === '弟弟' ? '♂' : '♀'}}</text>
+          <text wx:if="{{item.lost}}" class="tag tag-red">走失中</text>
+        </view>
+        <view class="pet-meta">{{item.species}} · {{item.ageText}} · {{item.weight}}kg</view>
+        <view class="pet-tags">
+          <text class="tag" wx:for="{{item.tags}}" wx:for-item="tg" wx:key="*this">{{tg}}</text>
+        </view>
+        <view class="pet-members">
+          <view class="mini-avatar avatar-ph" wx:for="{{item.members}}" wx:for-item="m" wx:key="id"
+            style="background:{{m.color}};width:44rpx;height:44rpx;font-size:20rpx;margin-right:-12rpx">
+            {{m.firstChar}}
+          </view>
+          <text class="member-more" wx:if="{{item.moreCount > 0}}">+{{item.moreCount}}</text>
+        </view>
+      </view>
+      <view class="card-arrow">›</view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty" wx:if="{{!pets.length}}">
+      <view class="empty-icon">🔎</view>
+      <view class="empty-title">没有找到相关宠物</view>
+      <view class="empty-desc">换个关键词试试，或添加一只新的毛孩子</view>
+      <button class="btn btn-primary btn-sm" bindtap="goAdd">＋ 添加宠物</button>
+    </view>
+
+    <!-- 添加卡片 -->
+    <view class="add-card" bindtap="goAdd" hover-class="hover-dim">
+      <view class="add-plus">＋</view>
+      <view>
+        <view class="add-title">添加新的毛孩子</view>
+        <view class="add-desc">为它建立专属成长档案</view>
+      </view>
+    </view>
+
+    <view class="bottom-tip">🐾 所有档案公开可见 · 支持多人协作共同记录</view>
+  </view>
+</view>
+

@@ -1,0 +1,59 @@
+/* pages/nearby/nearby.wxss */
+.nb-head {
+  background: linear-gradient(150deg, #EAF2DF, #CDE3B0);
+  padding: 36rpx 34rpx 26rpx;
+  border-radius: 0 0 44rpx 44rpx;
+}
+.nb-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.nb-title { font-size: 40rpx; font-weight: 800; color: #3F5A22; }
+.nb-sub { font-size: 23rpx; color: #5F7A42; margin-top: 4rpx; }
+.nb-locate {
+  font-size: 22rpx; color: #5F7A42; border: 1rpx solid #9DB97A;
+  padding: 8rpx 22rpx; border-radius: 30rpx; background: rgba(255,255,255,.7);
+}
+.nb-types { display: flex; margin-top: 22rpx; gap: 14rpx; flex-wrap: wrap; }
+.nb-type {
+  padding: 10rpx 24rpx; border-radius: 30rpx; font-size: 24rpx;
+  background: rgba(255,255,255,.7); color: #5F7A42;
+}
+.nb-type.active { background: #7BA05B; color: #fff; font-weight: 700; }
+.nb-sorts { display: flex; margin-top: 18rpx; }
+.nb-sort {
+  font-size: 23rpx; color: #6C8F46; margin-right: 26rpx;
+  background: rgba(255,255,255,.65); padding: 6rpx 18rpx; border-radius: 26rpx;
+}
+.nb-sort.on { color: #3F5A22; font-weight: 800; }
+
+.container { padding-top: 26rpx; }
+.svc { display: flex; align-items: center; }
+.svc-icon {
+  width: 96rpx; height: 96rpx; border-radius: 26rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 46rpx; flex-shrink: 0;
+}
+.svc-body { margin-left: 22rpx; min-width: 0; }
+.svc-name { font-size: 30rpx; font-weight: 800; color: #52311B; }
+.svc-meta { display: flex; align-items: center; margin-top: 4rpx; }
+.svc-dist { font-size: 23rpx; color: #D96A1E; font-weight: 700; margin-right: 20rpx; }
+.svc-rating { font-size: 23rpx; color: #B47D24; font-weight: 700; }
+.svc-hours { font-size: 22rpx; color: #8C5A2B; margin-top: 2rpx; }
+.svc-tags { margin-top: 8rpx; }
+.svc-actions { display: flex; flex-direction: column; gap: 16rpx; flex-shrink: 0; }
+.svc-btn {
+  width: 68rpx; height: 68rpx; border-radius: 50%;
+  background: #FFF1DC; display: flex; align-items: center; justify-content: center;
+  font-size: 30rpx; box-shadow: 0 4rpx 12rpx rgba(180,110,40,.15);
+}
+/* v1.1：附近宠物/宠物店双入口 */
+.dual-entry { display: flex; gap: 18rpx; padding: 22rpx 24rpx 4rpx; }
+.entry-card {
+  flex: 1; border-radius: 26rpx; padding: 24rpx 22rpx;
+  display: flex; flex-direction: column; align-items: center;
+}
+.entry-card.pets { background: linear-gradient(150deg, #DCEBC6, #9FBE75); }
+.entry-card.shops { background: linear-gradient(150deg, #FFD9A0, #FFB36B); }
+.en-emoji { font-size: 52rpx; }
+.en-title { font-size: 28rpx; font-weight: 800; color: #4C6B2F; margin-top: 6rpx; }
+.entry-card.shops .en-title { color: #6B4514; }
+.en-desc { font-size: 20rpx; color: #6C8F46; margin-top: 2rpx; }
+.entry-card.shops .en-desc { color: #8C5A2B; }

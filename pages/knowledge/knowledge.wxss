@@ -1,0 +1,60 @@
+/* pages/knowledge/knowledge.wxss */
+.kb-head {
+  background: linear-gradient(150deg, #FFF0D6, #FFD9A0);
+  padding: 40rpx 34rpx 34rpx;
+  border-radius: 0 0 44rpx 44rpx;
+}
+.kb-title { font-size: 42rpx; font-weight: 800; color: #5E3716; }
+.kb-sub { font-size: 23rpx; color: #7A4A1E; margin-top: 4rpx; }
+.kb-search {
+  display: flex; align-items: center;
+  background: #fff; border-radius: 40rpx; padding: 0 24rpx;
+  height: 76rpx; margin-top: 24rpx;
+}
+.kb-s-icon { margin-right: 12rpx; font-size: 24rpx; }
+.kb-input { flex: 1; font-size: 26rpx; color: #6E4224; height: 76rpx; line-height: 76rpx; }
+.ph { color: #C9A381; }
+.kb-collect {
+  font-size: 22rpx; color: #B08968; border-left: 1rpx solid #FFE2C2;
+  padding-left: 18rpx; flex-shrink: 0;
+}
+.kb-collect.on { color: #D96A1E; font-weight: 700; }
+
+.container { padding-top: 26rpx; }
+.cat-scroll { white-space: nowrap; width: 100%; margin-bottom: 24rpx; }
+.cat-row { display: inline-flex; padding: 0 4rpx; }
+.cat-chip {
+  display: inline-block; padding: 12rpx 30rpx; border-radius: 34rpx;
+  background: #fff; color: #8C5A2B; font-size: 26rpx;
+  border: 1rpx solid #FFE2C2; margin-right: 16rpx;
+}
+.cat-chip.active {
+  background: linear-gradient(135deg,#FF9F4A,#F47521); color: #fff;
+  border-color: transparent; font-weight: 700;
+  box-shadow: 0 6rpx 16rpx rgba(244,117,33,.25);
+}
+
+.article {
+  background: #fff; border-radius: 26rpx; padding: 26rpx;
+  margin-bottom: 20rpx; box-shadow: 0 6rpx 22rpx rgba(180,110,40,.07);
+  border-left: 8rpx solid #FFB36B;
+}
+.art-cat {
+  display: inline-block; font-size: 20rpx; color: #D96A1E;
+  background: #FFF1DC; padding: 4rpx 18rpx; border-radius: 20rpx; margin-bottom: 10rpx;
+}
+.art-title { font-size: 31rpx; font-weight: 800; color: #52311B; line-height: 1.5; }
+.art-summary {
+  font-size: 24rpx; color: #8C5A2B; line-height: 1.7;
+  margin: 10rpx 0 16rpx; display: -webkit-box; -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; overflow: hidden;
+}
+.art-foot { display: flex; justify-content: space-between; align-items: center; }
+.art-side { display: flex; align-items: center; }
+.art-read { font-size: 22rpx; color: #C9A381; margin-right: 18rpx; }
+.art-star { font-size: 36rpx; color: #E4CDB4; line-height: 1; }
+.art-star.on { color: #F2B04C; }
+
+/* v1.1 */
+.kb-head { overflow: hidden; position: relative; }
+.kb-paw { position: absolute; right: 240rpx; bottom: -6rpx; }

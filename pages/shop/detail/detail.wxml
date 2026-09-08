@@ -1,0 +1,123 @@
+<!--pages/shop/detail/detail.wxml-->
+<view class="page" wx:if="{{shop}}">
+  <!-- 返回按钮（兼容无原生返回栏场景） -->
+  <view class="flt-back" bindtap="goBack">‹</view>
+
+  <!-- 店铺头图 -->
+  <view class="sd-hero" style="background:linear-gradient(150deg,{{shop.color}}33,{{shop.color}}22)">
+    <view class="sd-orb o1"></view>
+    <view class="sd-orb o2"></view>
+    <view class="sd-logo">{{shop.logo}}</view>
+    <view class="sd-info">
+      <view class="sd-name-row">
+        <text class="sd-name">{{shop.name}}</text>
+        <text class="tag tag-orange" wx:if="{{shop.status === 'verified'}}">✓ 认证商家</text>
+      </view>
+      <view class="sd-rating">
+        <text class="stars">
+          <text wx:for="{{stars.full}}" wx:key="*this">★</text>
+          <text wx:if="{{stars.half}}" class="half">★</text>
+          <text wx:for="{{stars.empty}}" wx:key="*this" class="gray">★</text>
+        </text>
+        <text class="sd-score">{{shop.rating}}</text>
+        <text class="sd-count">{{shop.scoreCount}} 条评价</text>
+      </view>
+      <view class="sd-tags">
+        <text class="tag" wx:for="{{shop.tags}}" wx:for-item="tg" wx:key="*this">{{tg}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="container">
+    <!-- 资质认证 -->
+    <view class="cert-card">
+      <paw size="44" color="#6C8F46" />
+      <view class="cert-body flex1">
+        <view class="cert-title">资质已审核认证</view>
+        <view class="cert-desc">营业执照 ✓ · 经营者身份信息 ✓ · 由平台人工复核</view>
+      </view>
+      <view class="cert-seal">已认证</view>
+    </view>
+
+    <!-- 服务项目 -->
+    <view class="card">
+      <view class="section-head" style="margin-top:0">
+        <view class="section-title">服务项目</view>
+      </view>
+      <view class="svc-grid">
+        <view class="svc-cell" wx:for="{{shop.service}}" wx:key="*this">
+          <view class="svc-cell-dot"></view>{{item}}
+        </view>
+      </view>
+      <view class="divider"></view>
+      <view class="info-lines">
+        <view class="info-line"><text class="il-label">📍 地址</text><text class="il-value">{{shop.address}}（距你 {{shop.distance}}）</text></view>
+        <view class="info-line"><text class="il-label">🕐 营业</text><text class="il-value">{{shop.hours}}</text></view>
+        <view class="info-line"><text class="il-label">👨‍⚕️ 店主</text><text class="il-value">{{shop.owner}}</text></view>
+      </view>
+      <view class="intro-text">{{shop.intro}}</view>
+    </view>
+
+    <!-- 快捷操作 -->
+    <view class="op-row">
+      <view class="op-btn" bindtap="call">📞 拨打电话</view>
+      <view class="op-btn" bindtap="navigate">🧭 导航前往</view>
+      <view class="op-btn" bindtap="onShareAppMessage">↗️ 分享店铺</view>
+    </view>
+
+    <!-- 评分入口 -->
+    <view class="rate-banner" bindtap="openReview">
+      <view class="rate-left">
+        <view class="rate-title">{{myRated ? '已评价，感谢支持' : '体验过这家店？'}}</view>
+        <view class="rate-desc">{{myRated ? '你的评价已记录' : '打分评价，帮更多铲屎官避坑'}}</view>
+      </view>
+      <view class="rate-btn">{{myRated ? '查看' : '去打分'}} ★</view>
+    </view>
+
+    <!-- 评价列表 -->
+    <view class="section-head">
+      <view class="section-title">用户评价</view>
+      <view class="count-desc">共 {{reviews.length}} 条</view>
+    </view>
+    <view class="review" wx:for="{{reviews}}" wx:key="id">
+      <view class="rv-head">
+        <view class="avatar avatar-ph" style="background:{{item.avatarColor}};width:60rpx;height:60rpx;font-size:26rpx">{{item.userFirst}}</view>
+        <view class="rv-user flex1">
+          <view class="rv-name">{{item.user}}</view>
+          <view class="rv-time">{{item.timeText}}</view>
+        </view>
+        <view class="rv-stars">
+          <text wx:for="{{item.stars.full}}" wx:key="*this">★</text>
+          <text wx:for="{{item.stars.empty}}" wx:key="*this" class="gray">★</text>
+        </view>
+      </view>
+      <view class="rv-text">{{item.text}}</view>
+      <view class="rv-tags" wx:if="{{item.tags.length}}">
+        <text class="tag" wx:for="{{item.tags}}" wx:for-item="tg" wx:key="*this">{{tg}}</text>
+      </view>
+    </view>
+    <view class="empty" wx:if="{{!reviews.length}}">
+      <view class="empty-icon">💬</view>
+      <view class="empty-title">还没有评价</view>
+      <view class="empty-desc">成为第一个评价的人吧</view>
+    </view>
+  </view>
+
+  <!-- 打分弹层 -->
+  <view class="mask" wx:if="{{showReview}}" bindtap="closeReview">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title">给「{{shop.name}}」打分</view>
+      <view class="score-pick">
+        <view class="big-star {{item <= reviewForm.score ? 'on' : ''}}" wx:for="{{scoreOptions}}" wx:key="*this"
+          data-s="{{item}}" bindtap="pickScore">{{item <= reviewForm.score ? '★' : '☆'}}</view>
+      </view>
+      <view class="score-hint">{{reviewForm.score >= 4 ? '😊 很棒！' : reviewForm.score === 3 ? '🙂 还可以' : '😔 期待改进'}}</view>
+      <textarea class="review-text" placeholder="说说你的体验：服务、环境、价格…" placeholder-class="ph"
+        value="{{reviewForm.text}}" bindinput="onText" maxlength="300" />
+      <view class="sheet-actions">
+        <button class="btn btn-ghost flex1" bindtap="closeReview">取消</button>
+        <button class="btn btn-primary flex1" style="margin-left:20rpx" bindtap="submitReview">提交评价</button>
+      </view>
+    </view>
+  </view>
+</view>
