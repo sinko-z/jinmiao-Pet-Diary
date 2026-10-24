@@ -14,13 +14,15 @@ Page({
   },
 
   onLoad() {
-    this.setData({ pets: mock.pets });
+    this.applyFilter();
   },
 
   onShow() {
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 0 });
     }
+    // 从「添加/编辑档案」返回时同步最新数据
+    this.applyFilter();
   },
 
   onPullDownRefresh() {
@@ -57,9 +59,9 @@ Page({
     let list = mock.pets.filter(p => {
       const okType = this.data.filter === 'all' || p.type === this.data.filter;
       const okKw = !kw ||
-        p.name.toLowerCase().includes(kw) ||
-        p.species.toLowerCase().includes(kw) ||
-        p.tags.some(t => t.toLowerCase().includes(kw));
+        (p.name || '').toLowerCase().includes(kw) ||
+        (p.species || '').toLowerCase().includes(kw) ||
+        (p.tags || []).some(t => t.toLowerCase().includes(kw));
       return okType && okKw;
     });
     // 预计算成员头像首字（WXML 不支持表达式调方法，提前算好）

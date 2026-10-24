@@ -1,5 +1,7 @@
 <!--pages/knowledge/knowledge.wxml-->
 <view class="page">
+  <!-- 返回 -->
+  <view class="back-bar" bindtap="goBack">‹ 返回</view>
   <view class="kb-head">
 <paw size="90" color="rgba(255,255,255,.3)" rotate="-15" class="kb-paw" />
     <view class="kb-title">📚 养宠知识库</view>

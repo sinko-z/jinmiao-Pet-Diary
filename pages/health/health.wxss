@@ -19,6 +19,7 @@
 }
 .remind-icon { width: 60rpx; height: 60rpx; border-radius: 18rpx; display: flex; align-items: center; justify-content: center; font-size: 32rpx; margin-right: 16rpx; background: rgba(255,255,255,.7); flex-shrink: 0; }
 .remind-text { font-size: 25rpx; color: #8C5A2B; line-height: 1.6; }
+.remind-none { margin: 0 30rpx 10rpx; font-size: 23rpx; color: #B08968; }
 
 .container { padding-top: 8rpx; }
 .h-row { display: flex; align-items: center; }

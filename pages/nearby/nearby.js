@@ -1,6 +1,13 @@
 const mock = require('../../utils/mock.js');
 
 Page({
+  // 返回上一页（兼容从分享/扫码直接进入的情况）
+  goBack() {
+    const pages = getCurrentPages();
+    if (pages.length > 1) wx.navigateBack();
+    else wx.switchTab({ url: '/pages/index/index' });
+  },
+
   data: {
     list: [],
     types: [
@@ -23,9 +30,8 @@ Page({
     getApp().getLocation((res) => {
       this.setData({ locating: false });
       if (res.status === 'deny') wx.showToast({ title: '未开启定位，展示示例位置', icon: 'none' });
-      // 按距离重排（真实场景按 res.lat/lng 计算真实距离）
-      const list = mock.nearby.slice().sort((a, b) => this.parseDist(a.distance) - this.parseDist(b.distance));
-      this.setData({ list });
+      // 定位完成后仍走统一筛选/排序逻辑，避免覆盖用户的排序选择
+      this.apply();
     });
   },
 

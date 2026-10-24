@@ -11,8 +11,11 @@ Component({
   },
   methods: {
     switchTab(e) {
-      const { index, path } = e.currentTarget.dataset;
-      if (index === this.data.selected) return;
+      const index = Number(e.currentTarget.dataset.index);
+      const path = e.currentTarget.dataset.path;
+      if (!path || index === this.data.selected) return;
+      // 先更新高亮，再切换页面（目标页 onShow 会再次校准 selected）
+      this.setData({ selected: index });
       wx.switchTab({ url: path });
     }
   }

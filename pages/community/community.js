@@ -9,7 +9,8 @@ Page({
     petOptions: [{ id: '', label: '全部动态' }],
     showComposer: false,
     composer: { text: '', images: [] },
-    petFilterOptions: []
+    composerPet: '',
+    composerPetLabel: '🐾 关联宠物（可选）'
   },
 
   onLoad() {
@@ -24,6 +25,8 @@ Page({
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 1 });
     }
+    // 其他页面发布走失/动态后回到社区时同步
+    this.refresh();
   },
 
   onPullDownRefresh() {
@@ -37,36 +40,41 @@ Page({
       ...m,
       timeText: util.fromNow(m.time),
       images: m.images || [],
-      authorFirst: m.author.slice(0, 1)
+      comments: m.comments || [],
+      authorFirst: (m.author || '🐾').slice(0, 1)
     }));
-    this.applyFilter(list);
+    // 保留完整列表，筛选时始终基于全量数据，避免二次筛选叠加
+    this.rawList = list;
+    this.applyFilter();
   },
 
-  applyFilter(list) {
-    let out = list;
-    if (this.data.filterPet) out = list.filter(m => m.petId === this.data.filterPet);
+  applyFilter() {
+    const all = this.rawList || [];
+    const out = this.data.filterPet ? all.filter(m => m.petId === this.data.filterPet) : all;
     this.setData({ list: out });
   },
 
   onPetFilter(e) {
     const idx = Number(e.detail.value);
     const opt = this.data.petOptions[idx];
-    const label = opt.id ? ('只看：' + opt.label.split(' ')[1]) : '🐾 全部动态';
-    this.setData({ filterPet: opt.id, filterLabel: label });
-    this.applyFilter(this.data.list);
+    if (!opt) return;
+    this.setData({
+      filterPet: opt.id,
+      filterLabel: opt.id ? ('只看：' + opt.label) : '🐾 全部动态'
+    });
+    this.applyFilter();
   },
 
-  // 点赞
+  // 点赞（同步到数据源，切页刷新后仍保留）
   onLike(e) {
     if (!getApp().ensureLogin('点赞需要登录')) return;
     const id = e.currentTarget.dataset.id;
-    const list = this.data.list.map(m => {
-      if (m.id === id) {
-        const liked = !m.liked;
-        return { ...m, liked, likes: m.likes + (liked ? 1 : -1) };
-      }
-      return m;
-    });
+    const src = mock.moments.find(m => m.id === id);
+    if (!src) return;
+    src.liked = !src.liked;
+    src.likes = Math.max(0, (src.likes || 0) + (src.liked ? 1 : -1));
+    const list = this.data.list.map(m => m.id === id ? { ...m, liked: src.liked, likes: src.likes } : m);
+    if (this.rawList) this.rawList = this.rawList.map(m => m.id === id ? { ...m, liked: src.liked, likes: src.likes } : m);
     this.setData({ list });
   },
 
@@ -79,16 +87,18 @@ Page({
       editable: true,
       placeholderText: '友善评论，温暖每一个毛孩子',
       success: (r) => {
-        if (r.confirm && r.content && r.content.trim()) {
-          const list = this.data.list.map(m => {
-            if (m.id === id) {
-              return { ...m, comments: (m.comments || []).concat({ user: '我', text: r.content.trim() }) };
-            }
-            return m;
-          });
-          this.setData({ list });
-          wx.showToast({ title: '评论成功', icon: 'none' });
-        }
+        if (!r.confirm || !r.content || !r.content.trim()) return;
+        const text = r.content.trim();
+        const src = mock.moments.find(m => m.id === id);
+        if (src) src.comments = (src.comments || []).concat({ user: '我', text });
+        const list = this.data.list.map(m => m.id === id
+          ? { ...m, comments: (m.comments || []).concat({ user: '我', text }) }
+          : m);
+        if (this.rawList) this.rawList = this.rawList.map(m => m.id === id
+          ? { ...m, comments: (m.comments || []).concat({ user: '我', text }) }
+          : m);
+        this.setData({ list });
+        wx.showToast({ title: '评论成功', icon: 'none' });
       }
     });
   },
@@ -96,6 +106,7 @@ Page({
   // 预览图片
   previewImage(e) {
     const { urls, current } = e.currentTarget.dataset;
+    if (!urls) return;
     wx.previewImage({ urls: urls.split(','), current });
   },
 
@@ -131,37 +142,49 @@ Page({
       wx.showToast({ title: '写点什么再发布吧', icon: 'none' });
       return;
     }
+    const user = getApp().globalData.user;
+    const pet = mock.pets.find(p => p.id === this.data.composerPet);
     wx.showLoading({ title: '发布中…' });
     setTimeout(() => {
       wx.hideLoading();
-      const now = new Date();
-      const time = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
       const moment = {
-        id: 'm' + Date.now(), petId: null, petName: null, petEmoji: '🐾',
-        author: '我', authorFirst: '我', authorColor: '#F47521', time,
-        text: text || '分享一张照片', images: this.data.composer.images,
+        id: 'm' + Date.now(),
+        petId: pet ? pet.id : null,
+        petName: pet ? pet.name : null,
+        petEmoji: pet ? pet.emoji : '🐾',
+        author: (user && user.nickName) || '我',
+        authorColor: (user && user.avatarColor) || '#F47521',
+        time: util.formatDateTime(new Date()),
+        text: text || '分享一张照片',
+        images: this.data.composer.images,
         likes: 0, liked: false, comments: []
       };
-      const list = [moment].concat(this.data.list);
-      this.setData({ list, showComposer: false, composer: { text: '', images: [] } });
+      // 写入数据源，刷新/切页后不会丢失
+      mock.moments.unshift(moment);
+      this.setData({
+        showComposer: false,
+        composer: { text: '', images: [] },
+        composerPet: '',
+        composerPetLabel: '🐾 关联宠物（可选）',
+        filterPet: '',
+        filterLabel: '🐾 全部动态'
+      });
+      this.refresh();
       wx.showToast({ title: '发布成功 🎉', icon: 'none' });
     }, 700);
   },
 
-
   onComposerPet(e) {
     const idx = Number(e.detail.value);
     const opt = this.data.petOptions[idx];
-    this.setData({ composerPet: opt.id, composerPetLabel: opt.label });
+    if (!opt) return;
+    this.setData({
+      composerPet: opt.id,
+      composerPetLabel: opt.id ? ('🐾 ' + opt.label.split(' ').slice(1).join(' ')) : '🐾 关联宠物（可选）'
+    });
   },
 
-  onShare() {
-    wx.showToast({ title: '已唤起分享面板', icon: 'none' });
-    wx.showShareMenu();
-  },
   onShareAppMessage() {
     return { title: '金喵宠物社区 · 和铲屎官们一起晒毛孩子', path: '/pages/community/community' };
   }
 });
-
-

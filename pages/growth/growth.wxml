@@ -1,8 +1,10 @@
 <!--pages/growth/growth.wxml-->
 <view class="page">
+  <!-- 返回 -->
+  <view class="back-bar" bindtap="goBack">‹ 返回</view>
   <view class="growth-hero">
     <view class="gh-title">📸 {{petName}} 的成长相册</view>
-    <view class="gh-sub">共 {{list.length}} 张 · 按拍摄时间排列</view>
+    <view class="gh-sub">共 {{list.length}} 条记录 · 按时间排列</view>
   </view>
 
   <view class="container">
@@ -14,7 +16,8 @@
             <view class="tl-date">{{item.dateText}}</view>
             <view class="tl-time">{{item.timeText}}</view>
           </view>
-          <view class="tl-photo" wx:if="{{item.photo}}" data-url="{{item.photo}}" bindtap="preview">📷 照片</view>
+          <image wx:if="{{item.photo}}" class="tl-photo-img" src="{{item.photo}}" mode="aspectFill"
+            data-url="{{item.photo}}" bindtap="preview" />
           <view class="tl-note" wx:else>
             <view class="note-ph">{{item.emoji || '🐾'}}</view>
             {{item.note}}
@@ -37,9 +40,17 @@
   <view class="mask" wx:if="{{showUpload}}" bindtap="closeUpload">
     <view class="sheet" catchtap="noop">
       <view class="sheet-title">记录成长瞬间</view>
-      <view class="upload-box" bindtap="submitUpload">
-        <view class="upload-plus">＋</view>
-        <view class="upload-tip">点击选择照片（演示：直接记录）</view>
+      <view class="upload-box" bindtap="choosePhoto">
+        <image wx:if="{{uploadPhoto}}" class="upload-preview" src="{{uploadPhoto}}" mode="aspectFill" />
+        <block wx:else>
+          <view class="upload-plus">＋</view>
+          <view class="upload-tip">点击选择照片</view>
+        </block>
+        <view class="upload-remove" wx:if="{{uploadPhoto}}" catchtap="removePhoto">✕</view>
+      </view>
+      <view class="upload-loc" bindtap="chooseLocation">
+        <text>📍 {{uploadLocation || '选择地点'}}</text>
+        <text class="upload-loc-tip">点击修改 ›</text>
       </view>
       <textarea class="note-area" placeholder="写点备注吧，如：第一次洗澡、满月啦…" placeholder-class="ph"
         value="{{uploadNote}}" bindinput="onNote" maxlength="100" />

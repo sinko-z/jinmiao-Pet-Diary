@@ -1,5 +1,7 @@
 <!--pages/lost/lost.wxml-->
 <view class="page">
+  <!-- 返回 -->
+  <view class="back-bar" bindtap="goBack">‹ 返回</view>
   <view class="lost-hero">
     <view class="lh-icon">🐾</view>
     <view class="lh-body">
@@ -26,9 +28,14 @@
       </view>
       <view class="form-item">
         <view class="form-label">走失时间</view>
-        <picker mode="date" value="{{form.time}}" bindchange="onTime">
-          <view class="form-value picker-value">{{form.time}}<text class="form-arrow">▾</text></view>
-        </picker>
+        <view class="time-row">
+          <picker mode="date" value="{{form.time}}" bindchange="onTime">
+            <view class="form-value picker-value">{{form.time || '选择日期'}}<text class="form-arrow">▾</text></view>
+          </picker>
+          <picker mode="time" value="{{form.clock}}" bindchange="onClock">
+            <view class="form-value picker-value">{{form.clock}}<text class="form-arrow">▾</text></view>
+          </picker>
+        </view>
       </view>
       <view class="form-item">
         <view class="form-label">最后出现位置</view>

@@ -1,5 +1,7 @@
 <!--pages/health/health.wxml-->
 <view class="page">
+  <!-- 返回 -->
+  <view class="back-bar" bindtap="goBack">‹ 返回</view>
   <view class="seg">
     <view class="seg-item {{tab === 'vaccine' ? 'active' : ''}}" data-tab="vaccine" bindtap="switchTab">💉 疫苗</view>
     <view class="seg-item {{tab === 'deworm' ? 'active' : ''}}" data-tab="deworm" bindtap="switchTab">🪱 驱虫</view>
@@ -7,21 +9,22 @@
   </view>
 
   <!-- 智能提醒 -->
-  <view class="remind-head" wx:if="{{reminders.length}}">
+  <view class="remind-head">
     <view class="remind-title">🔔 智能提醒</view>
     <view class="ahead-pick">
       提前
-      <picker mode="selector" range="{{['3天','7天','14天','30天']}}" bindchange="onAheadChange">
+      <picker mode="selector" range="{{aheadOptions}}" value="{{aheadIndex}}" bindchange="onAheadChange">
         <text class="ahead-val">{{aheadDays}}天 ▾</text>
       </picker>
     </view>
   </view>
   <view class="remind-list" wx:if="{{reminders.length}}">
-    <view class="remind-item" wx:for="{{reminders}}" wx:key="text">
+    <view class="remind-item" wx:for="{{reminders}}" wx:key="key">
       <view class="remind-icon {{item.level}}">{{item.icon}}</view>
       <view class="remind-text">{{item.text}}</view>
     </view>
   </view>
+  <view class="remind-none" wx:else>暂无 {{aheadDays}} 天内到期的提醒，安心养宠 🐾</view>
 
   <view class="container">
 

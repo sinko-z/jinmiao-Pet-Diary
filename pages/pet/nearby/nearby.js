@@ -1,6 +1,13 @@
 const mock = require('../../../utils/mock.js');
 
 Page({
+  // 返回上一页（兼容从分享/扫码直接进入的情况）
+  goBack() {
+    const pages = getCurrentPages();
+    if (pages.length > 1) wx.navigateBack();
+    else wx.switchTab({ url: '/pages/index/index' });
+  },
+
   data: {
     list: [],
     view: 'list',          // list / map
@@ -86,22 +93,30 @@ Page({
     this.setData({ markers, center });
   },
 
-  // 查看宠物详情（有档案则跳档案，否则本地详情弹层）
+  // 查看宠物详情（展示该宠物的信息，并可在位置上查看）
   viewPet(e) {
     const id = e.currentTarget.dataset.id;
+    const pet = mock.nearbyPets.find(p => p.id === id);
+    if (!pet) { wx.showToast({ title: '宠物信息不存在', icon: 'none' }); return; }
     wx.showModal({
-      title: '查看附近宠物',
-      content: '完整档案与“加为好朋友”功能演示（真实环境跳转对应宠物档案）。',
-      confirmText: '查看档案',
+      title: `${pet.emoji} ${pet.name}`,
+      content: `${pet.species} · ${pet.gender} · ${pet.ageText}\n${pet.intro}\n\n位置：${pet.location}（距你 ${pet.distance}）`,
+      confirmText: '查看位置',
       cancelText: '关闭',
-      success: (r) => { if (r.confirm) wx.navigateTo({ url: '/pages/pet/detail/detail?id=p1' }); }
+      success: (r) => {
+        if (r.confirm) {
+          wx.openLocation({ latitude: pet.lat, longitude: pet.lng, name: pet.name, address: pet.address, scale: 16 });
+        }
+      }
     });
   },
 
   // 添加为好朋友（可对应“宠物好朋友”关系）
   addFriend(e) {
+    if (!getApp().ensureLogin('添加好朋友需要登录')) return;
     const id = e.currentTarget.dataset.id;
     const pet = mock.nearbyPets.find(p => p.id === id);
+    if (!pet) { wx.showToast({ title: '宠物信息不存在', icon: 'none' }); return; }
     wx.showToast({ title: `已向 ${pet.name} 的主人发送交友申请 🐾`, icon: 'none' });
   },
 

@@ -1,5 +1,7 @@
 <!--pages/profile/edit/edit.wxml-->
 <view class="page" wx:if="{{user}}">
+  <!-- 返回 -->
+  <view class="back-bar" bindtap="goBack">‹ 返回</view>
   <view class="pe-hero">
     <view class="avatar avatar-ph pe-avatar" style="background:{{user.avatarColor}};width:150rpx;height:150rpx;font-size:64rpx">
       {{user.firstChar || '我'}}

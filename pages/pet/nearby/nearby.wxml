@@ -1,5 +1,7 @@
 <!--pages/pet/nearby/nearby.wxml-->
 <view class="page">
+  <!-- 返回 -->
+  <view class="back-bar" bindtap="goBack">‹ 返回</view>
   <view class="pn-hero">
     <view class="pn-orb o1"></view>
     <view class="pn-orb o2"></view>

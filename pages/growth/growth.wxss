@@ -21,11 +21,9 @@
 .tl-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14rpx; }
 .tl-date { font-size: 30rpx; font-weight: 800; color: #6E4224; }
 .tl-time { font-size: 22rpx; color: #C9A381; }
-.tl-photo {
-  height: 320rpx; border-radius: 20rpx;
-  background: linear-gradient(135deg, #FFEFDE, #FFE3C4);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 30rpx; color: #C97B3C; margin-bottom: 14rpx;
+.tl-photo-img {
+  width: 100%; height: 360rpx; border-radius: 20rpx;
+  margin-bottom: 14rpx; display: block; background: #FFF6EC;
 }
 .tl-note {
   display: flex; align-items: center;
@@ -48,10 +46,25 @@
 }
 .sheet-title { font-size: 34rpx; font-weight: 800; color: #52311B; text-align: center; margin-bottom: 30rpx; }
 .upload-box {
+  position: relative; overflow: hidden;
   height: 280rpx; border-radius: 24rpx;
   border: 3rpx dashed #FFC08A; background: #FFF6EC;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
+.upload-preview { width: 100%; height: 100%; display: block; }
+.upload-remove {
+  position: absolute; top: 14rpx; right: 14rpx;
+  width: 48rpx; height: 48rpx; border-radius: 50%;
+  background: rgba(60, 30, 10, .55); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 26rpx;
+}
+.upload-loc {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 20rpx; padding: 20rpx 24rpx;
+  background: #FFF6EC; border-radius: 18rpx;
+  font-size: 26rpx; color: #6E4224;
+}
+.upload-loc-tip { font-size: 22rpx; color: #C9A381; }
 .upload-plus { font-size: 72rpx; color: #F47521; line-height: 1; margin-bottom: 10rpx; }
 .upload-tip { font-size: 24rpx; color: #B08968; }
 .note-area {

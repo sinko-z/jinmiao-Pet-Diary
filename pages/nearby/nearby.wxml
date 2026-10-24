@@ -1,5 +1,7 @@
 <!--pages/nearby/nearby.wxml-->
 <view class="page">
+  <!-- 返回 -->
+  <view class="back-bar" bindtap="goBack">‹ 返回</view>
   <view class="nb-head">
     <view class="nb-top">
       <view>

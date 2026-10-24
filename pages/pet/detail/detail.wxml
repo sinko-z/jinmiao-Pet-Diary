@@ -26,7 +26,7 @@
       <view class="stat-divider"></view>
       <view class="stat"><view class="stat-num">{{pet.members.length}}</view><view class="stat-label">协作者</view></view>
       <view class="stat-divider"></view>
-      <view class="stat"><view class="stat-num">7</view><view class="stat-label">成长照片</view></view>
+      <view class="stat"><view class="stat-num">{{growthCount}}</view><view class="stat-label">成长记录</view></view>
     </view>
   </view>
 
@@ -62,7 +62,7 @@
       <view class="q-item" data-url="/pages/weight/weight" bindtap="go">
         <view class="q-icon" style="background:#FCF0D8">⚖️</view><text>体重曲线</text>
       </view>
-      <view class="q-item" data-url="/pages/community/community" bindtap="go">
+      <view class="q-item" bindtap="goCommunity">
         <view class="q-icon" style="background:#FFEDE0">💬</view><text>发布动态</text>
       </view>
       <view class="q-item" bindtap="goLost">
@@ -169,15 +169,15 @@
       </view>
       <view class="story-text" wx:if="{{pet.story}}">{{pet.story}}</view>
       <view class="story-empty" wx:else bindtap="editStory">还没有故事，写下你们的第一个回忆吧 📖</view>
-      <view class="story-sign">—— by {{pet.members[0].name}}</view>
+      <view class="story-sign">—— by {{pet.members.length ? pet.members[0].name : '铲屎官'}}</view>
     </view>
 
     <!-- 走失入口 -->
     <view class="lost-banner" bindtap="goLost" hover-class="hover-dim">
       <view class="lost-icon">🐾</view>
       <view class="lost-body">
-        <view class="lost-title">宠物走失了？</view>
-        <view class="lost-desc">一键发布走失信息，推送给附近用户帮忙留意</view>
+        <view class="lost-title">{{pet.lost ? '宠物已找回？' : '宠物走失了？'}}</view>
+        <view class="lost-desc">{{pet.lost ? '点击解除走失状态，停止继续推送' : '一键发布走失信息，推送给附近用户帮忙留意'}}</view>
       </view>
       <view class="lost-arrow">›</view>
     </view>
@@ -195,7 +195,7 @@
         <view class="inv-copy" bindtap="copyInvite">复制</view>
       </view>
       <view class="inv-actions">
-        <button class="btn btn-primary flex1" bindtap="shareInvite">分享给微信好友</button>
+        <button class="btn btn-primary flex1" open-type="share">分享给微信好友</button>
       </view>
       <view class="inv-tip">💡 对方点开链接后自动进入「{{pet.name}}」档案 → 点击“加入宠物家庭”即可成为协作者</view>
     </view>

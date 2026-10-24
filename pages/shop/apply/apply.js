@@ -1,4 +1,5 @@
 const mock = require('../../../utils/mock.js');
+const util = require('../../../utils/util.js');
 
 Page({
   data: {
@@ -25,7 +26,20 @@ Page({
     let existing = null;
     try { existing = wx.getStorageSync('merchantApp') || null; } catch (e) {}
     if (existing) {
-      this.setData({ existing });
+      // 回填上次提交的资料，便于修改后重新提交
+      this.setData({
+        existing,
+        form: Object.assign({}, this.data.form, {
+          category: existing.category || this.data.form.category,
+          shopName: existing.shopName || '',
+          address: existing.address === '待补充' ? '' : (existing.address || ''),
+          phone: existing.phone || '',
+          intro: existing.intro || '',
+          license: existing.license || '',
+          idcardFront: existing.idcardFront || '',
+          idcardBack: existing.idcardBack || ''
+        })
+      });
       wx.setNavigationBarTitle({ title: '入驻申请' });
     }
   },
@@ -60,12 +74,19 @@ Page({
   goManage() { wx.redirectTo({ url: '/pages/shop/manage/manage' }); },
 
   submit() {
+    if (!getApp().ensureLogin('商家入驻申请需要登录')) return;
+    const existing = this.data.existing;
+    if (existing && existing.status === 'verified' && mock.shops.some(s => s.id === existing.shopId)) {
+      wx.showToast({ title: '你已入驻，无需重复申请', icon: 'none' });
+      return;
+    }
     const f = this.data.form;
     if (!f.shopName.trim()) { wx.showToast({ title: '请填写店铺名称', icon: 'none' }); return; }
     if (!f.license) { wx.showToast({ title: '请上传营业执照', icon: 'none' }); return; }
     if (!f.idcardFront || !f.idcardBack) { wx.showToast({ title: '请上传身份证正反面', icon: 'none' }); return; }
 
     wx.showLoading({ title: '提交审核中…' });
+    const today = util.formatDate(new Date());
     setTimeout(() => {
       wx.hideLoading();
       const app = {
@@ -79,7 +100,7 @@ Page({
         idcardFront: f.idcardFront,
         idcardBack: f.idcardBack,
         status: 'reviewing',     // reviewing 审核中
-        submitTime: '2026-09-07',
+        submitTime: today,
         applicant: getApp().globalData.user ? getApp().globalData.user.nickName : '我'
       };
       wx.setStorageSync('merchantApp', app);
@@ -97,7 +118,7 @@ Page({
             const verified = Object.assign({}, app, {
               status: 'verified',
               shopId: demo.id,
-              reviewTime: '2026-09-07',
+              reviewTime: today,
               shopName: demo.name
             });
             wx.setStorageSync('merchantApp', verified);

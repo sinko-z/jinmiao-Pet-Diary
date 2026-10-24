@@ -1,4 +1,11 @@
 Page({
+  // 返回上一页（兼容从分享/扫码直接进入的情况）
+  goBack() {
+    const pages = getCurrentPages();
+    if (pages.length > 1) wx.navigateBack();
+    else wx.switchTab({ url: '/pages/index/index' });
+  },
+
   data: {
     user: null,
     colors: ['#FF9F4A', '#F47521', '#E4572E', '#F2B04C', '#7BA05B', '#E8A13C'],

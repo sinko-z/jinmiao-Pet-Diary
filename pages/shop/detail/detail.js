@@ -17,6 +17,11 @@ Page({
   onLoad(query) {
     const id = query.id || 's1';
     const shop = mock.shops.find(s => s.id === id);
+    if (!shop) {
+      wx.showToast({ title: '店铺不存在', icon: 'none' });
+      setTimeout(() => this.goBack(), 600);
+      return;
+    }
     const reviews = (mock.reviews[id] || []).slice().sort((a, b) => b.time.localeCompare(a.time))
       .map(r => ({ ...r, timeText: util.fromNow(r.time), userFirst: r.user.slice(0, 1), stars: { full: r.score, empty: 5 - r.score } }));
     const full = Math.floor(shop.rating);
@@ -53,7 +58,19 @@ Page({
 
   openReview() {
     if (!getApp().ensureLogin('给商家打分评价需要登录')) return;
+    if (this.hasRated()) {
+      this.setData({ myRated: true });
+      wx.showToast({ title: '你已评价过该店铺', icon: 'none' });
+      return;
+    }
     this.setData({ showReview: true, reviewForm: { score: 5, text: '' } });
+  },
+
+  hasRated() {
+    if (this.data.myRated) return true;
+    const user = getApp().globalData.user;
+    if (!user) return false;
+    return (mock.reviews[this.data.id] || []).some(r => r.user === user.nickName);
   },
   closeReview() { this.setData({ showReview: false }); },
   noop() {},
@@ -67,6 +84,7 @@ Page({
   onText(e) { this.setData({ 'reviewForm.text': e.detail.value }); },
 
   submitReview() {
+    if (this.hasRated()) { wx.showToast({ title: '你已评价过该店铺', icon: 'none' }); return; }
     const f = this.data.reviewForm;
     if (!f.text.trim()) { wx.showToast({ title: '写几句感受再提交吧', icon: 'none' }); return; }
     const user = getApp().globalData.user || { nickName: '我', avatarColor: '#F47521' };
@@ -85,6 +103,15 @@ Page({
     const rating = Math.round((total / scoreCount) * 10) / 10;
     const full = Math.floor(rating);
     const half = rating - full >= 0.5 ? 1 : 0;
+
+    // 写回数据源：评价列表与店铺评分在返回后仍保留
+    const bucket = mock.reviews[this.data.id] || (mock.reviews[this.data.id] = []);
+    bucket.unshift({
+      id: rev.id, user: rev.user, avatarColor: rev.avatarColor,
+      time: rev.time, score: rev.score, text: rev.text, tags: rev.tags
+    });
+    Object.assign(shop, { rating, scoreCount });
+
     this.setData({
       reviews, showReview: false, myRated: true,
       shop: { ...shop, rating, scoreCount },

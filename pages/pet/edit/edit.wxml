@@ -1,5 +1,7 @@
 <!--pages/pet/edit/edit.wxml-->
 <view class="page">
+  <!-- 返回 -->
+  <view class="back-bar" bindtap="goBack">‹ 返回</view>
   <view class="container">
 
     <!-- 类型分类 -->

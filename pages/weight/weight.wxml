@@ -1,5 +1,7 @@
 <!--pages/weight/weight.wxml-->
 <view class="page">
+  <!-- 返回 -->
+  <view class="back-bar" bindtap="goBack">‹ 返回</view>
   <view class="w-hero">
     <view class="w-stat">
       <view class="w-num">{{latest ? latest.weight : '--'}}</view>
@@ -22,7 +24,7 @@
 
     <view class="card chart-card">
       <view class="chart-title">⚖️ 体重变化曲线</view>
-      <canvas canvas-id="weightChart" class="chart" style="width:640rpx;height:420rpx"></canvas>
+      <canvas canvas-id="weightChart" class="chart" style="width:{{chartW}}px;height:{{chartH}}px"></canvas>
       <view class="chart-tip">横轴为记录日期 · 纵轴为体重 (kg)</view>
     </view>
 

@@ -62,6 +62,8 @@
   background: #fff; border: 2rpx solid #FFE2C2; border-radius: 40rpx;
   padding: 20rpx 0; font-size: 26rpx; color: #D96A1E; font-weight: 700;
 }
+button.op-btn { margin: 0; line-height: 1.4; }
+button.op-btn::after { border: none; }
 
 .rate-banner {
   display: flex; align-items: center; justify-content: space-between;

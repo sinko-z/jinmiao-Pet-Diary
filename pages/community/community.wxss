@@ -43,6 +43,12 @@
 }
 .act { flex: 1; text-align: center; font-size: 25rpx; color: #8C5A2B; }
 .act.liked { color: #E4572E; font-weight: 700; }
+/* 分享按钮使用原生 button open-type="share"，抹平默认边框与内边距 */
+.act-share {
+  background: transparent; border: none; padding: 0; margin: 0;
+  line-height: inherit; height: auto; font-size: 25rpx; font-weight: 400; color: #8C5A2B;
+}
+.act-share::after { border: none; }
 
 .m-comments {
   margin-top: 18rpx; background: #FFF9F1; border-radius: 18rpx;

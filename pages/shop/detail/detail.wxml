@@ -62,7 +62,7 @@
     <view class="op-row">
       <view class="op-btn" bindtap="call">📞 拨打电话</view>
       <view class="op-btn" bindtap="navigate">🧭 导航前往</view>
-      <view class="op-btn" bindtap="onShareAppMessage">↗️ 分享店铺</view>
+      <button class="op-btn" open-type="share">↗️ 分享店铺</button>
     </view>
 
     <!-- 评分入口 -->

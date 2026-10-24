@@ -2,6 +2,13 @@ const mock = require('../../utils/mock.js');
 const util = require('../../utils/util.js');
 
 Page({
+  // 返回上一页（兼容从分享/扫码直接进入的情况）
+  goBack() {
+    const pages = getCurrentPages();
+    if (pages.length > 1) wx.navigateBack();
+    else wx.switchTab({ url: '/pages/index/index' });
+  },
+
   data: {
     id: '',
     petName: '',
@@ -16,7 +23,9 @@ Page({
     latest: null,
     trend: { level: 'normal', text: '数据太少', diff: 0 },
     showForm: false,
-    form: { weight: '', date: '' }
+    form: { weight: '', date: '' },
+    chartW: 640,
+    chartH: 420
   },
 
   onLoad(query) {
@@ -25,7 +34,16 @@ Page({
     const all = (mock.weights[id] || []).slice().sort((a, b) => a.date.localeCompare(b.date));
     this.setData({ id, petName: pet ? pet.name : '', allRecords: all });
     if (pet) wx.setNavigationBarTitle({ title: pet.name + ' 的体重' });
-    this.applyRange('3m');
+  },
+
+  onReady() {
+    // 旧版 Canvas 的绘制坐标单位是 px，必须按屏幕宽度把 640rpx 换算成 px
+    const info = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync();
+    const ratio = (info.windowWidth || 375) / 750;
+    this.chartRatio = ratio;
+    const chartW = Math.round(640 * ratio);
+    const chartH = Math.round(420 * ratio);
+    this.setData({ chartW, chartH }, () => this.applyRange(this.data.range));
   },
 
   // 切换时间段
@@ -41,7 +59,10 @@ Page({
     if (key !== 'all') {
       const months = key === '3m' ? 3 : 6;
       const cutoff = new Date(now.getFullYear(), now.getMonth() - months, now.getDate());
-      records = all.filter(r => new Date(r.date.replace(/-/g, '/')) >= cutoff);
+      records = all.filter(r => {
+        const d = util.toDate(r.date);
+        return d && d >= cutoff;
+      });
     }
     if (!records.length && all.length) records = [all[all.length - 1]];
     const latest = records.length ? records[records.length - 1] : null;
@@ -78,7 +99,11 @@ Page({
 
   openForm() {
     const today = util.formatDate(new Date());
-    this.setData({ showForm: true, form: { weight: '', date: today } });
+    const same = this.data.allRecords.find(r => r.date === today);
+    this.setData({
+      showForm: true,
+      form: { weight: same ? String(same.weight) : '', date: today }
+    });
   },
   closeForm() { this.setData({ showForm: false }); },
   noop() {},
@@ -87,20 +112,32 @@ Page({
 
   saveWeight() {
     const w = parseFloat(this.data.form.weight);
+    const date = this.data.form.date;
     if (!w || w <= 0 || w > 200) { wx.showToast({ title: '请输入有效体重', icon: 'none' }); return; }
-    const rec = { id: 'w' + Date.now(), date: this.data.form.date, weight: w };
-    const all = this.data.allRecords.concat(rec).sort((a, b) => a.date.localeCompare(b.date));
+    if (!date) { wx.showToast({ title: '请选择日期', icon: 'none' }); return; }
+    // 同一天重复记录时覆盖，避免曲线出现重复点
+    const all = this.data.allRecords.slice();
+    const idx = all.findIndex(r => r.date === date);
+    if (idx > -1) all[idx] = { ...all[idx], weight: w };
+    else all.push({ id: 'w' + Date.now(), date, weight: w });
+    all.sort((a, b) => a.date.localeCompare(b.date));
+    // 写入数据源，离开页面后再进入不会丢失
+    mock.weights[this.data.id] = all;
+    const pet = mock.pets.find(p => p.id === this.data.id);
+    if (pet) pet.weight = all[all.length - 1].weight;
     this.setData({ allRecords: all, showForm: false });
     this.applyRange(this.data.range);
-    wx.showToast({ title: '已记录 ⚖️', icon: 'none' });
+    wx.showToast({ title: idx > -1 ? '已更新当日体重 ⚖️' : '已记录 ⚖️', icon: 'none' });
   },
 
   // Canvas 折线图
   drawChart() {
     const recs = this.data.records;
+    if (!this.chartRatio) return; // 未完成 onReady 尺寸换算时不绘制，避免被裁切
     const ctx = wx.createCanvasContext('weightChart', this);
-    const W = 640, H = 420;
-    const padL = 70, padR = 30, padT = 40, padB = 70;
+    const k = this.chartRatio;
+    const W = 640 * k, H = 420 * k;
+    const padL = 78 * k, padR = 30 * k, padT = 46 * k, padB = 76 * k;
     const iw = W - padL - padR, ih = H - padT - padB;
     ctx.clearRect(0, 0, W, H);
 
@@ -108,7 +145,7 @@ Page({
     ctx.setStrokeStyle('#F5E3CE');
     ctx.setLineWidth(1);
     ctx.setFillStyle('#B08968');
-    ctx.setFontSize(18);
+    ctx.setFontSize(22 * k);
     const vLines = 5;
     let maxW = 0, minW = Infinity;
     recs.forEach(r => { maxW = Math.max(maxW, r.weight); minW = Math.min(minW, r.weight); });
@@ -124,13 +161,13 @@ Page({
       ctx.moveTo(padL, y);
       ctx.lineTo(W - padR, y);
       ctx.stroke();
-      ctx.fillText(val.toFixed(1) + 'kg', 8, y + 6);
+      ctx.fillText(val.toFixed(1) + 'kg', 6 * k, y + 7 * k);
     }
 
     if (!recs.length) {
       ctx.setFillStyle('#C9A381');
-      ctx.setFontSize(22);
-      ctx.fillText('暂无体重数据', W / 2 - 60, H / 2);
+      ctx.setFontSize(24 * k);
+      ctx.fillText('暂无体重数据', W / 2 - 70 * k, H / 2);
       ctx.draw();
       return;
     }
@@ -155,7 +192,7 @@ Page({
 
     // 折线
     ctx.setStrokeStyle('#F47521');
-    ctx.setLineWidth(4);
+    ctx.setLineWidth(4 * k);
     ctx.setLineCap('round');
     ctx.setLineJoin('round');
     ctx.beginPath();
@@ -165,27 +202,26 @@ Page({
     // 数据点 + 数值
     pts.forEach((p, i) => {
       ctx.beginPath();
-      ctx.arc(p.x, p.y, 7, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, 7 * k, 0, Math.PI * 2);
       ctx.setFillStyle('#FFFFFF');
       ctx.fill();
       ctx.setStrokeStyle('#F47521');
-      ctx.setLineWidth(4);
+      ctx.setLineWidth(4 * k);
       ctx.stroke();
       ctx.setFillStyle('#8C5A2B');
-      ctx.setFontSize(20);
-      ctx.fillText(recs[i].weight.toFixed(1), p.x - 16, p.y - 16);
+      ctx.setFontSize(22 * k);
+      ctx.fillText(recs[i].weight.toFixed(1), p.x - 17 * k, p.y - 18 * k);
     });
 
     // X 轴日期
     ctx.setFillStyle('#B08968');
-    ctx.setFontSize(18);
+    ctx.setFontSize(22 * k);
     const labelIdx = [0, Math.floor((recs.length - 1) / 2), recs.length - 1];
     labelIdx.forEach(i => {
       const d = recs[i].date.slice(5).replace('-', '/');
-      ctx.fillText(d, pts[i].x - 18, H - padB + 36);
+      ctx.fillText(d, pts[i].x - 20 * k, H - padB + 38 * k);
     });
 
     ctx.draw();
   }
 });
-

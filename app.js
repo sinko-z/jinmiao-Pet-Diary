@@ -99,42 +99,63 @@ App({
   // ===== 定位授权工具（调用手机定位 + 征得用户同意）=====
   // cb({status:'ok', lat, lng}) / status: 'deny' | 'fail'
   getLocation(cb) {
-    // 1) 先说明用途并请求授权
+    const done = (res) => { if (cb) cb(res); };
     wx.getSetting({
       success: (res) => {
         const auth = res.authSetting['scope.userLocation'];
         if (auth === false) {
-          // 用户之前拒绝过：引导去设置开启
+          // 用户之前拒绝过：引导去设置开启，开启成功后自动重试
           wx.showModal({
             title: '需要定位权限',
             content: '开启定位后，才能记录宠物轨迹、查看附近宠物与好店。是否去设置中允许使用位置信息？',
             confirmText: '去设置',
             confirmColor: '#F47521',
-            success: (r) => { if (r.confirm) wx.openSetting(); if (cb) cb({ status: 'deny' }); }
+            success: (r) => {
+              if (!r.confirm) { done({ status: 'deny' }); return; }
+              wx.openSetting({
+                success: (s) => {
+                  if (s.authSetting['scope.userLocation']) this.fetchLocation(done);
+                  else done({ status: 'deny' });
+                },
+                fail: () => done({ status: 'deny' })
+              });
+            }
           });
           return;
         }
-        if (auth === true || auth === undefined) {
-          // 2) 首次会弹系统授权框；已授权直接取
-          wx.getLocation({
-            type: 'gcj02',
-            success: (res) => cb && cb({ status: 'ok', lat: res.latitude, lng: res.longitude, speed: res.speed || 0, accuracy: res.accuracy || 0 }),
-            fail: (err) => {
-              if (err.errMsg && err.errMsg.indexOf('auth deny') > -1) {
-                wx.showModal({
-                  title: '需要定位权限',
-                  content: '定位被拒绝，将无法使用附近功能。是否去设置中开启？',
-                  confirmText: '去设置',
-                  success: (r) => { if (r.confirm) wx.openSetting(); if (cb) cb({ status: 'deny' }); }
-                });
-              } else {
-                if (cb) cb({ status: 'fail' });
-              }
-            }
-          });
-        }
+        // 已授权直接取；首次会弹系统授权框
+        this.fetchLocation(done);
       },
-      fail: () => cb && cb({ status: 'fail' })
+      fail: () => done({ status: 'fail' })
+    });
+  },
+
+  // 实际获取定位，并在拒绝时引导去设置（设置成功后可重试）
+  fetchLocation(done) {
+    wx.getLocation({
+      type: 'gcj02',
+      success: (res) => done({ status: 'ok', lat: res.latitude, lng: res.longitude, speed: res.speed || 0, accuracy: res.accuracy || 0 }),
+      fail: (err) => {
+        const msg = (err && err.errMsg) || '';
+        const denied = msg.indexOf('auth deny') > -1 || msg.indexOf('auth denied') > -1 || msg.indexOf('authorize') > -1;
+        if (!denied) { done({ status: 'fail' }); return; }
+        wx.showModal({
+          title: '需要定位权限',
+          content: '定位被拒绝，将无法使用附近功能。是否去设置中开启？',
+          confirmText: '去设置',
+          confirmColor: '#F47521',
+          success: (r) => {
+            if (!r.confirm) { done({ status: 'deny' }); return; }
+            wx.openSetting({
+              success: (s) => {
+                if (s.authSetting['scope.userLocation']) this.fetchLocation(done);
+                else done({ status: 'deny' });
+              },
+              fail: () => done({ status: 'deny' })
+            });
+          }
+        });
+      }
     });
   }
 });

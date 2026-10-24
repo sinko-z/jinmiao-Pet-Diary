@@ -1,5 +1,7 @@
 <!--pages/track/track.wxml-->
 <view class="page track-page">
+  <!-- 返回 -->
+  <view class="back-bar" bindtap="goBack">‹ 返回</view>
 
   <!-- 打卡输入栏 -->
   <view class="checkin-bar">
@@ -16,7 +18,7 @@
   </view>
 
   <view class="toolbar">
-    <picker mode="selector" range="{{dateOptions}}" bindchange="onDateChange">
+    <picker mode="selector" range="{{dateOptions}}" value="{{dateIndex}}" bindchange="onDateChange">
       <view class="date-pick">📅 {{dateFilter}} ▾</view>
     </picker>
     <view class="toolbar-tip">共 {{list.length}} 次打卡</view>
@@ -37,6 +39,11 @@
           <view class="tl-note" wx:if="{{item.note}}">{{item.note}}</view>
         </view>
       </view>
+    </view>
+    <view class="empty" wx:if="{{!list.length}}">
+      <view class="empty-icon">📍</view>
+      <view class="empty-title">该时间范围内还没有打卡</view>
+      <view class="empty-desc">点击底部地图按钮或上方输入备注后打卡</view>
     </view>
   </view>
 

@@ -14,15 +14,15 @@ Page({
   refresh() {
     const app = getApp();
     const login = app.isLogin();
-    const user = app.globalData.user;
+    const rawUser = app.globalData.user;
+    // 复制一份再补充展示字段，避免污染全局用户对象
+    const user = rawUser ? { ...rawUser, firstChar: rawUser.nickName.slice(0, 1) } : null;
     // 参与档案：未登录展示示例，登录后展示“我”的档案
     const myName = login ? user.nickName : '小喵';
     const seen = {};
     const myPets = mock.pets.filter(p => p.members.some(m => m.name === myName)).filter(p => (seen[p.id] ? false : (seen[p.id] = true)));
     let merchantApp = null;
     try { merchantApp = wx.getStorageSync('merchantApp') || null; } catch (e) {}
-    // 预计算头像首字
-    if (user) user.firstChar = user.nickName.slice(0, 1);
     this.setData({
       login,
       user,
@@ -84,17 +84,10 @@ Page({
   // 邀请好友加入宠物家庭
   inviteFamily() {
     if (!getApp().ensureLogin('邀请好友加入宠物家庭需要登录')) return;
-    wx.showModal({
-      title: '邀请加入宠物家庭',
-      content: '把“宠物家庭邀请卡”分享给好友，对方加入后即可一起记录、共同守护毛孩子（每份档案最多 30 人）。',
-      confirmText: '生成邀请卡',
-      success: (r) => {
-        if (r.confirm) {
-          wx.showShareMenu({ withShareTicket: true });
-          wx.showToast({ title: '已生成邀请卡，去分享吧 🐾', icon: 'none' });
-        }
-      }
-    });
+    const pet = this.data.myPets[0];
+    if (!pet) { wx.switchTab({ url: '/pages/index/index' }); return; }
+    // 进入宠物档案的邀请页，在那里生成并分享邀请卡
+    wx.navigateTo({ url: '/pages/pet/detail/detail?id=' + pet.id + '&invite=1' });
   },
 
   logout() {

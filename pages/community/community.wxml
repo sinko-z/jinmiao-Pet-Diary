@@ -48,7 +48,7 @@
             {{item.liked ? '❤️' : '🤍'}} {{item.likes}}
           </view>
           <view class="act" data-id="{{item.id}}" bindtap="onComment">💬 {{item.comments.length}}</view>
-          <view class="act" catchtap="onShare">↗️ 分享</view>
+          <button class="act act-share" open-type="share">↗️ 分享</button>
         </view>
 
         <!-- 评论区 -->
@@ -70,7 +70,7 @@
       <view class="sheet-title">发布动态</view>
       <view class="composer-pet">
         <picker mode="selector" range="{{petOptions}}" range-key="label" bindchange="onComposerPet">
-          <view class="cpet">🐾 关联宠物（可选） ▾</view>
+          <view class="cpet">{{composerPetLabel}} ▾</view>
         </picker>
       </view>
       <textarea class="composer-text" placeholder="分享毛孩子的可爱瞬间吧～" placeholder-class="ph"

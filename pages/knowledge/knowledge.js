@@ -1,6 +1,13 @@
 const mock = require('../../utils/mock.js');
 
 Page({
+  // 返回上一页（兼容从分享/扫码直接进入的情况）
+  goBack() {
+    const pages = getCurrentPages();
+    if (pages.length > 1) wx.navigateBack();
+    else wx.switchTab({ url: '/pages/index/index' });
+  },
+
   data: {
     cats: [],
     cat: '全部',
@@ -48,19 +55,29 @@ Page({
 
   toggleCollect(e) {
     const id = e.currentTarget.dataset.id;
-    const list = this.data.list.map(k => k.id === id ? { ...k, collected: !k.collected } : k);
-    this.setData({ list });
-    wx.showToast({ title: '已更新收藏', icon: 'none' });
+    const item = mock.knowledge.find(k => k.id === id);
+    if (!item) return;
+    // 写回数据源，收藏状态在切页后仍保留
+    item.collected = !item.collected;
+    this.apply();
+    wx.showToast({ title: item.collected ? '已收藏' : '已取消收藏', icon: 'none' });
   },
 
   openArticle(e) {
     const { id, title } = e.currentTarget.dataset;
+    const item = mock.knowledge.find(k => k.id === id);
+    if (!item) return;
+    // 阅读数 +1 并保留
+    item.read = (item.read || 0) + 1;
+    this.apply();
     wx.showModal({
-      title: title,
-      content: '文章正文内容将在此展示（演示版仅预览）。可收藏本文，方便日后阅读。',
-      confirmText: '收藏',
+      title,
+      content: item.content || '文章正文内容将在此展示（演示版仅预览）。可收藏本文，方便日后阅读。',
+      confirmText: item.collected ? '已收藏' : '收藏',
       cancelText: '关闭',
-      success: (r) => { if (r.confirm) this.toggleCollect({ currentTarget: { dataset: { id } } }); }
+      success: (r) => {
+        if (r.confirm && !item.collected) this.toggleCollect({ currentTarget: { dataset: { id } } });
+      }
     });
   }
 });

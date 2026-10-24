@@ -13,7 +13,8 @@ Page({
 
   onShow() {
     const app = getApp();
-    this.setData({ login: app.isLogin() });
+    // 每次进入重置，避免退出登录后残留上一位商家的数据
+    this.setData({ login: app.isLogin(), app: null, shop: null, reviews: [] });
     if (!app.isLogin()) return;
     // 读取入驻申请
     let merchant = null;
@@ -28,7 +29,7 @@ Page({
           fullArr: Array.from({ length: r.score }, () => 0),
           emptyArr: Array.from({ length: 5 - r.score }, () => 0)
         }));
-        this.setData({ shop, reviews });
+        this.setData({ shop, reviews, 'stats.avgRating': shop.rating });
       }
     }
   },
@@ -44,7 +45,7 @@ Page({
   goDetail() {
     if (this.data.shop) wx.navigateTo({ url: '/pages/shop/detail/detail?id=' + this.data.shop.id });
   },
-  goNearby() { wx.switchTab({ url: '/pages/nearby/nearby' }); },
+  goNearby() { wx.navigateTo({ url: '/pages/nearby/nearby' }); },
   goIndex() { wx.switchTab({ url: '/pages/shop/index/index' }); },
 
   toggleNotice(e) {

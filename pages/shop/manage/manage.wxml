@@ -45,6 +45,16 @@
     </view>
   </view>
 
+  <!-- 审核未通过 / 店铺数据缺失 -->
+  <view class="container" wx:elif="{{app.status === 'rejected' || !shop}}">
+    <view class="card empty-card">
+      <view class="empty-icon">📄</view>
+      <view class="empty-title">{{app.status === 'rejected' ? '入驻申请未通过' : '店铺信息加载失败'}}</view>
+      <view class="empty-desc">{{app.status === 'rejected' ? '请核对资料后重新提交申请' : '请重新提交入驻申请后再试'}}</view>
+      <button class="btn btn-primary" bindtap="goApply">重新申请入驻</button>
+    </view>
+  </view>
+
   <!-- 已登录：入驻成功（演示数据店铺） -->
   <view class="container" wx:else>
     <view class="mgr-head">
